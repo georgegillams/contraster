@@ -1,2 +1,3 @@
-# speedy-colour-contrast-checker
+# SpeedyColourContrastChecker
+
 A colour contrast checker utility that's fast and easy to use
