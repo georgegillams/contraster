@@ -7,13 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0826576028C225510069D5C5 /* SpeedyColourContrastCheckerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0826575F28C225510069D5C5 /* SpeedyColourContrastCheckerApp.swift */; };
-		0826576228C225510069D5C5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0826576128C225510069D5C5 /* ContentView.swift */; };
+		0804583E28C3B2160046060A /* ContrastResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0804583D28C3B2160046060A /* ContrastResult.swift */; };
 		0826576428C225540069D5C5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0826576328C225540069D5C5 /* Assets.xcassets */; };
-		0826576728C225540069D5C5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0826576628C225540069D5C5 /* Preview Assets.xcassets */; };
 		0826577228C225540069D5C5 /* speedy_colour_contrast_checkerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0826577128C225540069D5C5 /* speedy_colour_contrast_checkerTests.swift */; };
 		0826577C28C225540069D5C5 /* speedy_colour_contrast_checkerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0826577B28C225540069D5C5 /* speedy_colour_contrast_checkerUITests.swift */; };
 		0826577E28C225540069D5C5 /* speedy_colour_contrast_checkerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0826577D28C225540069D5C5 /* speedy_colour_contrast_checkerUITestsLaunchTests.swift */; };
+		0866CAEC28C2613A0092633D /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0866CAEA28C2613A0092633D /* Main.swift */; };
+		0866CAED28C2613A0092633D /* About.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0866CAEB28C2613A0092633D /* About.swift */; };
+		0866CAEF28C261540092633D /* PagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0866CAEE28C261540092633D /* PagerView.swift */; };
+		0866CAF728C264820092633D /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0866CAF628C264820092633D /* Info.plist */; };
+		0866CAF828C265500092633D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0866CAF228C264410092633D /* Main.storyboard */; };
+		0866CAFB28C265CF0092633D /* ColourPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0866CAFA28C265CF0092633D /* ColourPreview.swift */; };
+		0866CAFE28C26A950092633D /* Color+Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0866CAFD28C26A950092633D /* Color+Functions.swift */; };
+		08DF062828C2298300F1B733 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DF062728C2298300F1B733 /* AppDelegate.swift */; };
+		08DF062A28C229B500F1B733 /* AppDelegate+Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DF062928C229B500F1B733 /* AppDelegate+Functions.swift */; };
+		08F6419E28C3AD10008EB225 /* ContrastResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F6419D28C3AD10008EB225 /* ContrastResults.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,18 +42,25 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0804583D28C3B2160046060A /* ContrastResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContrastResult.swift; sourceTree = "<group>"; };
 		0826575C28C225510069D5C5 /* SpeedyColourContrastChecker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpeedyColourContrastChecker.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		0826575F28C225510069D5C5 /* SpeedyColourContrastCheckerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedyColourContrastCheckerApp.swift; sourceTree = "<group>"; };
-		0826576128C225510069D5C5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		0826576328C225540069D5C5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		0826576628C225540069D5C5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		0826576828C225540069D5C5 /* speedy_colour_contrast_checker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = speedy_colour_contrast_checker.entitlements; sourceTree = "<group>"; };
 		0826576D28C225540069D5C5 /* SpeedyColourContrastCheckerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpeedyColourContrastCheckerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0826577128C225540069D5C5 /* speedy_colour_contrast_checkerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = speedy_colour_contrast_checkerTests.swift; sourceTree = "<group>"; };
 		0826577728C225540069D5C5 /* SpeedyColourContrastCheckerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpeedyColourContrastCheckerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0826577B28C225540069D5C5 /* speedy_colour_contrast_checkerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = speedy_colour_contrast_checkerUITests.swift; sourceTree = "<group>"; };
 		0826577D28C225540069D5C5 /* speedy_colour_contrast_checkerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = speedy_colour_contrast_checkerUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		0842689628C2262F001CECE1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		0866CAEA28C2613A0092633D /* Main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
+		0866CAEB28C2613A0092633D /* About.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = About.swift; sourceTree = "<group>"; };
+		0866CAEE28C261540092633D /* PagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerView.swift; sourceTree = "<group>"; };
+		0866CAF228C264410092633D /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		0866CAF528C264820092633D /* SpeedyColourContrastChecker.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = SpeedyColourContrastChecker.entitlements; sourceTree = "<group>"; };
+		0866CAF628C264820092633D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0866CAFA28C265CF0092633D /* ColourPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColourPreview.swift; sourceTree = "<group>"; };
+		0866CAFD28C26A950092633D /* Color+Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Functions.swift"; sourceTree = "<group>"; };
+		08DF062728C2298300F1B733 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		08DF062928C229B500F1B733 /* AppDelegate+Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+Functions.swift"; sourceTree = "<group>"; };
+		08F6419D28C3AD10008EB225 /* ContrastResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContrastResults.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,12 +111,14 @@
 		0826575E28C225510069D5C5 /* SpeedyColourContrastChecker */ = {
 			isa = PBXGroup;
 			children = (
-				0842689628C2262F001CECE1 /* Info.plist */,
-				0826575F28C225510069D5C5 /* SpeedyColourContrastCheckerApp.swift */,
-				0826576128C225510069D5C5 /* ContentView.swift */,
+				0866CAFC28C26A830092633D /* Utils */,
+				0866CAF928C265830092633D /* Components */,
+				0866CAF428C264730092633D /* Trunk */,
+				0866CAF328C264460092633D /* Views */,
 				0826576328C225540069D5C5 /* Assets.xcassets */,
-				0826576828C225540069D5C5 /* speedy_colour_contrast_checker.entitlements */,
 				0826576528C225540069D5C5 /* Preview Content */,
+				08DF062728C2298300F1B733 /* AppDelegate.swift */,
+				08DF062928C229B500F1B733 /* AppDelegate+Functions.swift */,
 			);
 			path = SpeedyColourContrastChecker;
 			sourceTree = "<group>";
@@ -109,7 +126,6 @@
 		0826576528C225540069D5C5 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
-				0826576628C225540069D5C5 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -129,6 +145,44 @@
 				0826577D28C225540069D5C5 /* speedy_colour_contrast_checkerUITestsLaunchTests.swift */,
 			);
 			path = SpeedyColourContrastCheckerUITests;
+			sourceTree = "<group>";
+		};
+		0866CAF328C264460092633D /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				0866CAEB28C2613A0092633D /* About.swift */,
+				0866CAEA28C2613A0092633D /* Main.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		0866CAF428C264730092633D /* Trunk */ = {
+			isa = PBXGroup;
+			children = (
+				0866CAF628C264820092633D /* Info.plist */,
+				0866CAF228C264410092633D /* Main.storyboard */,
+				0866CAF528C264820092633D /* SpeedyColourContrastChecker.entitlements */,
+			);
+			path = Trunk;
+			sourceTree = "<group>";
+		};
+		0866CAF928C265830092633D /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				0866CAEE28C261540092633D /* PagerView.swift */,
+				0866CAFA28C265CF0092633D /* ColourPreview.swift */,
+				08F6419D28C3AD10008EB225 /* ContrastResults.swift */,
+				0804583D28C3B2160046060A /* ContrastResult.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		0866CAFC28C26A830092633D /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				0866CAFD28C26A950092633D /* Color+Functions.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -235,8 +289,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0826576728C225540069D5C5 /* Preview Assets.xcassets in Resources */,
+				0866CAF828C265500092633D /* Main.storyboard in Resources */,
 				0826576428C225540069D5C5 /* Assets.xcassets in Resources */,
+				0866CAF728C264820092633D /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,8 +316,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0826576228C225510069D5C5 /* ContentView.swift in Sources */,
-				0826576028C225510069D5C5 /* SpeedyColourContrastCheckerApp.swift in Sources */,
+				0866CAEC28C2613A0092633D /* Main.swift in Sources */,
+				0866CAFE28C26A950092633D /* Color+Functions.swift in Sources */,
+				0866CAFB28C265CF0092633D /* ColourPreview.swift in Sources */,
+				0866CAED28C2613A0092633D /* About.swift in Sources */,
+				08F6419E28C3AD10008EB225 /* ContrastResults.swift in Sources */,
+				08DF062828C2298300F1B733 /* AppDelegate.swift in Sources */,
+				0804583E28C3B2160046060A /* ContrastResult.swift in Sources */,
+				0866CAEF28C261540092633D /* PagerView.swift in Sources */,
+				08DF062A28C229B500F1B733 /* AppDelegate+Functions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -417,7 +479,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = SpeedyColourContrastChecker/speedy_colour_contrast_checker.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SpeedyColourContrastChecker/Trunk/SpeedyColourContrastChecker.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -426,8 +488,9 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = SpeedyColourContrastChecker/Info.plist;
+				INFOPLIST_FILE = SpeedyColourContrastChecker/Trunk/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -445,7 +508,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = SpeedyColourContrastChecker/speedy_colour_contrast_checker.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SpeedyColourContrastChecker/Trunk/SpeedyColourContrastChecker.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -454,8 +517,9 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = SpeedyColourContrastChecker/Info.plist;
+				INFOPLIST_FILE = SpeedyColourContrastChecker/Trunk/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
