@@ -1,8 +1,8 @@
 //
-//  PagerView.swift
-//  Barmaid
+//  ColourSwatch.swift
+//  SpeedyColourContrastChecker
 //
-//  Created by Steven J. Selcuk on 2.05.2022.
+//  Created by George Gillams on 02/09/2022.
 //
 
 import SwiftUI

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0804583E28C3B2160046060A /* ContrastResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0804583D28C3B2160046060A /* ContrastResult.swift */; };
 		0826576428C225540069D5C5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0826576328C225540069D5C5 /* Assets.xcassets */; };
 		0826577228C225540069D5C5 /* speedy_colour_contrast_checkerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0826577128C225540069D5C5 /* speedy_colour_contrast_checkerTests.swift */; };
 		0826577C28C225540069D5C5 /* speedy_colour_contrast_checkerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0826577B28C225540069D5C5 /* speedy_colour_contrast_checkerUITests.swift */; };
@@ -20,6 +21,7 @@
 		0866CAFE28C26A950092633D /* Color+Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0866CAFD28C26A950092633D /* Color+Functions.swift */; };
 		08DF062828C2298300F1B733 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DF062728C2298300F1B733 /* AppDelegate.swift */; };
 		08DF062A28C229B500F1B733 /* AppDelegate+Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DF062928C229B500F1B733 /* AppDelegate+Functions.swift */; };
+		08F6419E28C3AD10008EB225 /* ContrastResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F6419D28C3AD10008EB225 /* ContrastResults.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +42,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0804583D28C3B2160046060A /* ContrastResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContrastResult.swift; sourceTree = "<group>"; };
 		0826575C28C225510069D5C5 /* SpeedyColourContrastChecker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpeedyColourContrastChecker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0826576328C225540069D5C5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0826576D28C225540069D5C5 /* SpeedyColourContrastCheckerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpeedyColourContrastCheckerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -57,6 +60,7 @@
 		0866CAFD28C26A950092633D /* Color+Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Functions.swift"; sourceTree = "<group>"; };
 		08DF062728C2298300F1B733 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		08DF062928C229B500F1B733 /* AppDelegate+Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+Functions.swift"; sourceTree = "<group>"; };
+		08F6419D28C3AD10008EB225 /* ContrastResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContrastResults.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,6 +171,8 @@
 			children = (
 				0866CAEE28C261540092633D /* PagerView.swift */,
 				0866CAFA28C265CF0092633D /* ColourPreview.swift */,
+				08F6419D28C3AD10008EB225 /* ContrastResults.swift */,
+				0804583D28C3B2160046060A /* ContrastResult.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -314,7 +320,9 @@
 				0866CAFE28C26A950092633D /* Color+Functions.swift in Sources */,
 				0866CAFB28C265CF0092633D /* ColourPreview.swift in Sources */,
 				0866CAED28C2613A0092633D /* About.swift in Sources */,
+				08F6419E28C3AD10008EB225 /* ContrastResults.swift in Sources */,
 				08DF062828C2298300F1B733 /* AppDelegate.swift in Sources */,
+				0804583E28C3B2160046060A /* ContrastResult.swift in Sources */,
 				0866CAEF28C261540092633D /* PagerView.swift in Sources */,
 				08DF062A28C229B500F1B733 /* AppDelegate+Functions.swift in Sources */,
 			);
