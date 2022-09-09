@@ -7,19 +7,6 @@
 
 import SwiftUI
 
-enum ElementType {
-    case largeText
-    case smallText
-    case graphical
-}
-
-enum ComplianceLevel {
-    case passAAA
-    case passAA
-    case fail
-    case pending
-}
-
 class ContrastResultHelpers {
     static func textForElementType(elementType: ElementType) -> String {
         switch elementType {
@@ -66,8 +53,8 @@ struct ContrastResult: View {
     
     var body: some View {
         HStack {
-            Text(ContrastResultHelpers.textForElementType(elementType: elementType))
-            Text(ContrastResultHelpers.textForComplianceLevel(complianceLevel: level)).foregroundColor(ContrastResultHelpers.colorForComplianceLevel(complianceLevel: level))
+            Text(ContrastResultHelpers.textForElementType(elementType: elementType)).lineLimit(1)
+            Text(ContrastResultHelpers.textForComplianceLevel(complianceLevel: level)).foregroundColor(ContrastResultHelpers.colorForComplianceLevel(complianceLevel: level)).lineLimit(1)
         }
     }
 }

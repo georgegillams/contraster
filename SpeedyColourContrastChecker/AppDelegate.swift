@@ -16,15 +16,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         statusBarItem = NSStatusBar.system.statusItem(withLength: CGFloat(NSStatusItem.variableLength))
-        invisibleWindow.backgroundColor = .red
         invisibleWindow.alphaValue = 0
+//        invisibleWindow.backgroundColor = NSColor.red
+        invisibleWindow.level = .floating
 
         // Get SwiftUI View
         let contentView = Main()
         // Create a popover
         let popover = NSPopover()
         popover.contentSize = NSSize(width: 300, height: 300)
-        popover.behavior = .transient
+        popover.behavior = .applicationDefined
         // Embed our SwiftUI view into the popover
         popover.contentViewController = NSHostingController(rootView: contentView)
         // Register it
@@ -33,11 +34,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         if let button = statusBarItem.button {
             // Set menubar icon
-            button.image = NSImage(named: "menubar-icon")
-            // Set menubar text
-            button.title = "Barmaid"
+            button.image = NSImage(systemSymbolName: "eyedropper.halffull", accessibilityDescription: "Speedy Colour Contrast Picker")
             // Re-arrange status bar icon position
-            button.imagePosition = NSControl.ImagePosition.imageLeft
+            button.imagePosition = NSControl.ImagePosition.imageOnly
             // Set font
             button.font = NSFont.monospacedDigitSystemFont(ofSize: 12.0, weight: NSFont.Weight.light)
             // Register click action
