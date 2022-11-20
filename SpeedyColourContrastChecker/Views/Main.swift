@@ -7,93 +7,85 @@
 
 import SwiftUI
 
-enum PickingMode {
-    case notPicking
-    case pickingFirstColor
-    case pickingSecondColor
-}
-
 struct Main: View {
     var delegate: AppDelegate = NSApp.delegate as! AppDelegate
-    @StateObject var appModel = AppModel()
-    var mouseLocation: NSPoint { NSEvent.mouseLocation }
+    @ObservedObject var appModel: AppModel
+    
+    init(appModel: AppModel) {
+        self.appModel = appModel
+    }
     
     @State var currentPage: Int = 0
-    @State var pickingMode: PickingMode = .notPicking
     
     var body: some View {
         PagerView(pageCount: 1, currentIndex: $currentPage) {
-            VStack(alignment: .center, spacing: 10) {
-                Spacer()
-                Button(pickingMode != .notPicking ? "Cancel pick" : "Pick", role: nil, action: {
-                    if (pickingMode == .notPicking) {
-                        pickingMode = .pickingFirstColor
-                        appModel.createNewPick()
-                    } else {
-                        appModel.cancelPick()
+            ZStack(alignment: .bottomTrailing) {
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack {
+                        Text(appModel.pickingMode != .notPicking ? "Current pick" : "Not picking")
+                            .font(Font.system(size:24))
+                            .padding(.bottom, 10)
+                        Spacer()
+                        GButton(role: nil, action: {
+                            if (appModel.pickingMode == .notPicking) {
+                                appModel.createNewPick()
+                                delegate.updateMouseTrapWindow()
+                            } else {
+                                appModel.cancelPick()
+                                delegate.updateMouseTrapWindow()
+                            }
+                        }) {
+                            Image(systemName: "eyedropper.halffull").foregroundColor(Color.white)
+                            Text(appModel.pickingMode == .notPicking ? "New pick" : "Cancel").foregroundColor(Color.white)
+                        }.bgColor(appModel.pickingMode == .notPicking ? Color.blue : Color.red)
+                    }.frame( alignment: .center)
+                    Text(appModel.pickingMode != .notPicking ? "Click anywhere on screen to select the next colour" : "Click the picker button to get started")
+                        .padding(.bottom, 20)
+                    
+                    ContrastResultsAnimated(model: appModel.currentResult, onDelete: nil)
+                    
+                    Text("History")
+                        .font(Font.system(size:24))
+                        .padding(.bottom, 10)
+                    if (appModel.resultsList.isEmpty) {
+                        Text("No results here yet!").frame(maxWidth: .infinity)
+                        Text("To add results here, simply start picking colours.").frame(maxWidth: .infinity)
                     }
-                })
-                Text(pickingMode != .notPicking ? "Picking colours..." : "Not picking")
-                    .font(Font.system(size:24))
-                    .padding(.bottom, 10)
-                Text(pickingMode != .notPicking ? "Click anywhere on screen to select the next colour" : "...")
-                    .padding(.bottom, 20)
-                
-                ScrollView() {
-                    VStack(spacing: 40) {
-                        ForEach(appModel.resultsList) { result in
-                            ContrastResults(model: result)
-                        }
-                    }.padding(.bottom, 20)
-                }
+                    ScrollView() {
+                        VStack(alignment: .leading, spacing: 40) {
+                            ForEach(appModel.resultsList) { result in
+                                ContrastResultsAnimated(model: result, onDelete: {
+                                    appModel.deleteColourPair(pickId: result.pickId)
+                                })
+                            }
+                        }.frame(maxWidth: .infinity)
+                    }
+                }.padding(EdgeInsets(top: 12, leading: 12, bottom: 0, trailing: 12))
+                Button(role: nil, action: {
+                    delegate.openMenu()
+                }) {
+                    Image(systemName: "gear").foregroundColor(Color.white)
+                }.accessibilityLabel("Open menu").buttonStyle(.plain).padding(EdgeInsets(top: 0, leading: 0, bottom: 4, trailing: 4))
             }
-//        }.onHover{over in
-//            mouseOverPopup = over
         }
-        .onAppear(perform: {
-            NSEvent.addLocalMonitorForEvents(matching: [.mouseMoved]) {
-                if (pickingMode == .notPicking) {
-                    return $0
-                }
-                if(mouseLocation.x <= 0 || mouseLocation.y <= 0) {
-                    return $0
-                }
-                var rect = CGRect(x: mouseLocation.x, y: mouseLocation.y, width: 1, height: 1)
-                var imageRef = CGDisplayCreateImage(CGMainDisplayID(), rect: rect)
-                if imageRef == nil {
-                    print("nil imageRef \(imageRef)")
-                    return $0
-                }
-                var bitmapImageRef = NSBitmapImageRep(cgImage: imageRef!)
-                var color = bitmapImageRef.colorAt(x: 0, y: 0)?.cgColor
-                print("Color: \(color)")
-                if (color == nil ) {
-                    print("nil color \(color)")
-                    return $0
-                }
-                if(pickingMode == .pickingFirstColor) {
-                    appModel.updateFirstColor(color: Color(cgColor: color!))
-                }else if (pickingMode == .pickingSecondColor) {
-                    appModel.updateSecondColor(color: Color(cgColor: color!))
-                }
-                return $0
-            }
-            NSEvent.addLocalMonitorForEvents(matching: [.leftMouseDown, .leftMouseUp]) { event in
-                if (pickingMode == .notPicking) {
-                    return event
-                }
-                // TODO: prevent default. If not possible, then re-focus popover window
-                if(event.type == .leftMouseUp) {
-                    return event
-                }
-                if(pickingMode == .pickingFirstColor) {
-                    pickingMode = .pickingSecondColor
-                }else if(pickingMode == .pickingSecondColor) {
-                    pickingMode = .notPicking
-                }
-                return event
-            }
-        })
-        .frame(minWidth: 445, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .center)
+            .frame(minWidth: 500, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .center)
     }
 }
+
+
+struct Main_Previews: PreviewProvider {
+    static var exampleAppModel: AppModel {
+        get {
+            let exampleAppModel = AppModel()
+            exampleAppModel.updateFirstColor(color: Color.red)
+            exampleAppModel.captureFirstColor()
+            exampleAppModel.currentPickerColor = Color.blue
+            return exampleAppModel
+        }
+    }
+    
+    static var previews: some View {
+        Main(appModel: exampleAppModel)
+    }
+}
+

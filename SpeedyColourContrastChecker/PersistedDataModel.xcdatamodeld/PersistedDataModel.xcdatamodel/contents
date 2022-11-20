@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21279" systemVersion="21G115" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="PickedColorPair" representedClassName=".PickedColorPair" syncable="YES">
+        <attribute name="hexColor1" optional="YES" attributeType="String"/>
+        <attribute name="hexColor2" optional="YES" attributeType="String"/>
+        <attribute name="pickId" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="Settings" representedClassName=".Settings" syncable="YES">
+        <attribute name="firstWelcomeDone" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+    </entity>
+</model>

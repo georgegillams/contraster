@@ -9,50 +9,55 @@ import Cocoa
 import SwiftUI
 
 struct AboutView: View {
-    var nsObject: AnyObject? = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as AnyObject
+    var delegate: AppDelegate = NSApp.delegate as! AppDelegate
+    var versionNsObject: AnyObject? = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as AnyObject
 
     var body: some View {
-        let version = nsObject as! String
-        VStack(alignment: .center, spacing: 10) {
+        let version = versionNsObject as! String
+        VStack {
             VStack(alignment: .center) {
-                Image("Barmaid")
+                Image("eyedropper-3d")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 64, height: 64)
 
-                Text("Barmaid \(version)")
+                Text("Speedy Contrast Checker \(version)")
                     .bold()
                     .font(.title)
                     .padding(.vertical, 5.0)
-                    .accessibility(hint: Text("Rek \(version)"))
+                    
 
-                Text("Created by Steven J. Selcuk")
+                Text("Created by George Gillams")
                     .underline()
                     .onTapGesture {
-                        let email = "https://github.com/stevenselcuk"
-                        if let url = URL(string: email) {
+                        if let url = URL(string: "https://www.georgegillams.co.uk/") {
                             NSWorkspace.shared.open(url)
                         }
                     }
-                    .accessibility(hint: Text("This boilerplate created by Steven Selcuk. Opens developers GitHub profile on click."))
+                    
             }
             .padding(.vertical, 10.0)
-
+            
+                Button(action: {
+                    delegate.showWelcomeTutorial()
+                }) {
+                    Text("View welcome tutorial")
+                }
+            
             HStack {
                 Text("Bug or Feature?")
 
                 Button(action: {
-                    let email = "https://twitter.com/hevalandsteven"
-                    if let url = URL(string: email) {
+                    if let url = URL(string: "https://www.georgegillams.co.uk/contact") {
                         NSWorkspace.shared.open(url)
                     }
                 }) {
                     Text("Tell Me")
                 }
-            } .accessibility(hint: Text("Opens developers Twitter profile"))
-        }.padding(.horizontal, 10.0)
+            }
+        }.padding(10.0)
             .background(Color.clear)
-            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
+            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .center)
     }
 }
 
@@ -60,16 +65,22 @@ class AboutWindowController {
     static func createWindow() {
         var windowRef: NSWindow
         windowRef = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 200, height: 280),
+            contentRect: NSRect(x: 0, y: 0, width: 380, height: 240),
             styleMask: [
                 .titled,
                 .closable,
                 .borderless],
             backing: .buffered, defer: false)
         windowRef.contentView = NSHostingView(rootView: AboutView())
-        windowRef.title = "About Barmaid"
-        windowRef.level = NSWindow.Level.screenSaver
+        windowRef.title = "About Speedy Contrast Checker"
+        windowRef.level = .floating
         windowRef.isReleasedWhenClosed = false
         windowRef.makeKeyAndOrderFront(nil)
+    }
+}
+
+struct AboutView_Previews: PreviewProvider {
+    static var previews: some View {
+        AboutView().frame(width: 380, height: 240)
     }
 }
