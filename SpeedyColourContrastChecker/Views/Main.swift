@@ -9,62 +9,83 @@ import SwiftUI
 
 struct Main: View {
     var delegate: AppDelegate = NSApp.delegate as! AppDelegate
-
-    // UI Spesific
-    @State private var currentPage = 0
-
+    @ObservedObject var appModel: AppModel
+    
+    init(appModel: AppModel) {
+        self.appModel = appModel
+    }
+    
+    @State var currentPage: Int = 0
+    
     var body: some View {
-        PagerView(pageCount: 2, currentIndex: $currentPage) {
-            VStack(alignment: .center, spacing: 10) {
-                Spacer()
-                Text("Barmaid")
-                    .help(Text("Barmaid Menubar App Boilerplate"))
-                    .font(Font.system(size:30, design: .monospaced))
-                    .padding(.bottom, 100)
-                HStack {
-                    Image(systemName: "gearshape")
-                    Text("Settings")
-                }
-                .padding(.bottom, 20)
-                .contentShape(Rectangle())
-                .help(Text("App Settings"))
-                .accessibility(hint: Text("On click navigates to settings section"))
-                .onTapGesture {
-                    withAnimation {
-                        currentPage = 1
-                    }
-                }
-            }
-
-            VStack(alignment: .center, spacing: 10) {
-                Spacer()
-                HStack(alignment: .center, spacing: 30) {
+        PagerView(pageCount: 1, currentIndex: $currentPage) {
+            ZStack(alignment: .bottomTrailing) {
+                VStack(alignment: .leading, spacing: 10) {
                     HStack {
-                        Image(systemName: "arrowshape.turn.up.left")
-                        Text("Back")
+                        Text(appModel.pickingMode != .notPicking ? "Current pick" : "Not picking")
+                            .font(Font.system(size:24))
+                            .padding(.bottom, 10)
+                        Spacer()
+                        GButton(role: nil, action: {
+                            if (appModel.pickingMode == .notPicking) {
+                                appModel.createNewPick()
+                                delegate.updateMouseTrapWindow()
+                            } else {
+                                appModel.cancelPick()
+                                delegate.updateMouseTrapWindow()
+                            }
+                        }) {
+                            Image(systemName: "eyedropper.halffull").foregroundColor(Color.white)
+                            Text(appModel.pickingMode == .notPicking ? "New pick" : "Cancel").foregroundColor(Color.white)
+                        }.bgColor(appModel.pickingMode == .notPicking ? Color.blue : Color.red)
+                    }.frame( alignment: .center)
+                    Text(appModel.pickingMode != .notPicking ? "Click anywhere on screen to select the next colour" : "Click the picker button to get started")
+                        .padding(.bottom, 20)
+                    
+                    ContrastResultsAnimated(model: appModel.currentResult, onDelete: nil)
+                    
+                    Text("History")
+                        .font(Font.system(size:24))
+                        .padding(.bottom, 10)
+                    if (appModel.resultsList.isEmpty) {
+                        Text("No results here yet!").frame(maxWidth: .infinity)
+                        Text("To add results here, simply start picking colours.").frame(maxWidth: .infinity)
                     }
-                    .contentShape(Rectangle())
-                    .help(Text("Return Main View"))
-                    .accessibility(hint: Text("On click navigates to main section"))
-                    .onTapGesture {
-                        withAnimation {
-                            currentPage = 0
-                        }
+                    ScrollView() {
+                        VStack(alignment: .leading, spacing: 40) {
+                            ForEach(appModel.resultsList) { result in
+                                ContrastResultsAnimated(model: result, onDelete: {
+                                    appModel.deleteColourPair(pickId: result.pickId)
+                                })
+                            }
+                        }.frame(maxWidth: .infinity)
                     }
-
-                    HStack {
-                        Image(systemName: "power")
-                        Text("Quit App")
-                    }
-                    .contentShape(Rectangle())
-                    .help(Text("Return Main View"))
-                    .accessibility(hint: Text("On click navigates to main section"))
-                    .onTapGesture {
-                        delegate.quit()
-                    }
-                }.padding(.bottom, 20)
+                }.padding(EdgeInsets(top: 12, leading: 12, bottom: 0, trailing: 12))
+                Button(role: nil, action: {
+                    delegate.openMenu()
+                }) {
+                    Image(systemName: "gear").foregroundColor(Color.white)
+                }.accessibilityLabel("Open menu").buttonStyle(.plain).padding(EdgeInsets(top: 0, leading: 0, bottom: 4, trailing: 4))
             }
         }
-        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .center)
+            .frame(minWidth: 500, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .center)
     }
 }
+
+
+struct Main_Previews: PreviewProvider {
+    static var exampleAppModel: AppModel {
+        get {
+            let exampleAppModel = AppModel()
+            exampleAppModel.updateFirstColor(color: Color.red)
+            exampleAppModel.captureFirstColor()
+            exampleAppModel.currentPickerColor = Color.blue
+            return exampleAppModel
+        }
+    }
+    
+    static var previews: some View {
+        Main(appModel: exampleAppModel)
+    }
+}
+

@@ -12,7 +12,10 @@ struct ColourPreview: View {
     
     var body: some View {
         HStack {
-            Rectangle().fill(color ?? Color.gray).frame(width: 18, height: 18, alignment: .leading).cornerRadius(4)
+            Rectangle().fill(color ?? Color.clear).frame(width: 18, height: 18, alignment: .leading).cornerRadius(4).overlay(
+                RoundedRectangle(cornerRadius: 4)
+                    .stroke(color != nil ? .clear : .gray, lineWidth: 1.4)
+            )
             Text(color?.hexString ?? "...")
         }
     }
