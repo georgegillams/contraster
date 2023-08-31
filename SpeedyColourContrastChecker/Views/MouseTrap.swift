@@ -17,7 +17,12 @@ struct MouseTrap: View {
     var body: some View {
         ZStack {
             if(appModel.pickingMode != .notPicking) {
-                Rectangle().fill(Color(cgColor: CGColor(red: 1, green: 1, blue: 1, alpha: 0.01))).frame(width: 50, height: 50)
+                Rectangle().fill(Color(cgColor: CGColor(red: 1, green: 1, blue: 1, alpha: 0))).frame(width: 50, height: 50)
+                // Comment MT_21
+                // We show a 1x1 rectangle at the center of this view so that the user mouse click is registered.
+                // Making this transparentcauses the click event to be ignored, so it must be the current picker colour, or almost completely invisible.
+                // See Comment AD+F_102
+                Rectangle().fill(appModel.currentPickerColor ?? Color(cgColor: CGColor(red: 1, green: 1, blue: 1, alpha: 0.01))).frame(width: 1, height: 1)
                 Circle()
                     .stroke(.black, lineWidth: 20).frame(width: 30, height: 30)
                 Circle()
