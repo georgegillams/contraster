@@ -79,7 +79,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         if let button = statusBarItem.button {
             // Set menubar icon
-            button.image = NSImage(systemSymbolName: "eyedropper.halffull", accessibilityDescription: "Speedy Colour Contrast Picker")
+            button.image = NSImage(named: NSImage.Name("menu-icon"))
             // Re-arrange status bar icon position
             button.imagePosition = NSControl.ImagePosition.imageOnly
             // Set font

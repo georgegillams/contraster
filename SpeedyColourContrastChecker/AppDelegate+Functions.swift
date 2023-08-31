@@ -99,7 +99,10 @@ extension AppDelegate {
             
             let mousePositionWithinScreen = self.pixelConverterWindow.convertPoint(fromScreen: mouseLocation)
             let mousePositionWithinScreenInvertedY = (screenHeight ?? 0) - mousePositionWithinScreen.y
-            let colourPickingPixelFrame = NSRect(x: max(0, mousePositionWithinScreen.x), y: max(0, mousePositionWithinScreenInvertedY), width: 1, height: 1)
+            // Comment AD+F_102
+            // We read the pixel that is 2 pixels away from the mouse cursor. This is to avoid reading the value of the MouseTrap UI, and ensure we instead read the colour that is just left of the mouse
+            // See Comment MT_21 for more information
+            let colourPickingPixelFrame = NSRect(x: max(0, mousePositionWithinScreen.x - 2), y: max(0, mousePositionWithinScreenInvertedY - 2), width: 1, height: 1)
             
             let imageRef = CGDisplayCreateImage(displayID, rect: colourPickingPixelFrame)
             if imageRef == nil {
