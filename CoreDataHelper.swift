@@ -1,6 +1,6 @@
 //
 //  CoreDataHelper.swift
-//  SpeedyColourContrastChecker
+//  Contraster
 //
 //  Created by George Gillams on 27/09/2022.
 //
