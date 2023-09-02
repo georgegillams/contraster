@@ -26,14 +26,16 @@ class ResultsModel: ObservableObject, Identifiable {
         complianceLevelGraphical = .pending
         contrastRatio = nil
         recalculateCompliance()
+        recalculateForegroundColors()
     }
     
     var pickId: String
     @Published var _color1: Color?
     var color1: Color? {
         set (newValue) {
-           _color1 = newValue
+            _color1 = newValue
             recalculateCompliance()
+            recalculateForegroundColors()
         }
         get {
             return _color1
@@ -42,13 +44,16 @@ class ResultsModel: ObservableObject, Identifiable {
     @Published var _color2: Color?
     var color2: Color? {
         set (newValue) {
-           _color2 = newValue
+            _color2 = newValue
             recalculateCompliance()
+            recalculateForegroundColors()
         }
         get {
             return _color2
         }
     }
+    @Published var color1Foreground: Color?
+    @Published var color2Foreground: Color?
     @Published var color1Captured = false
     @Published var color2Captured = false
     @Published var complianceLevelLgText: ComplianceLevel
@@ -73,15 +78,20 @@ class ResultsModel: ObservableObject, Identifiable {
         
         return 0.2126 * componentR + 0.7152 * componentG + 0.0722 * componentB
     }
+
+    func calculateContrastRatio(color1: Color, color2: Color) -> Double {
+        let luminance1 = calculateLuminance(color: color1)
+        let luminance2 = calculateLuminance(color: color2)
+        let luminanceHigh = max(luminance1, luminance2)
+        let luminanceLow = min(luminance1, luminance2)
+        let contrastRatioValueUnrounded = (luminanceHigh + 0.05) / (luminanceLow + 0.05)
+        let contrastRatioValue = Double(round(100 * contrastRatioValueUnrounded)/100)
+        return contrastRatioValue
+    }
     
     func recalculateCompliance() {
         if (color1 != nil && color2 != nil) {
-            let luminance1 = calculateLuminance(color: color1!)
-            let luminance2 = calculateLuminance(color: color2!)
-            let luminanceHigh = max(luminance1, luminance2)
-            let luminanceLow = min(luminance1, luminance2)
-            let contrastRatioValueUnrounded = (luminanceHigh + 0.05) / (luminanceLow + 0.05)
-            let contrastRatioValue = Double(round(100 * contrastRatioValueUnrounded)/100)
+            let contrastRatioValue = calculateContrastRatio(color1:color1!, color2:color2!)
             
             // large text and graphical
             if(contrastRatioValue > 4.5) {
@@ -112,4 +122,37 @@ class ResultsModel: ObservableObject, Identifiable {
         complianceLevelGraphical = .pending
         contrastRatio = nil
     }
+
+    func recalculateForegroundColors() {
+        if(color1 != nil){
+            color1Foreground = calculateAccessibleForegroundColour(forBackground: color1!, closestTo:color2 ?? Color.gray)
+        } else {
+            color2Foreground = Color.black
+        }
+        if(color2 != nil){
+            color2Foreground = calculateAccessibleForegroundColour(forBackground: color2!, closestTo:color1 ?? Color.gray)
+        } else {
+            color2Foreground = Color.black
+        }
+    }
+
+    func calculateAccessibleForegroundColour(forBackground: Color, closestTo: Color) -> Color {
+        var lighterAcceptableColor = closestTo
+        var darkerAcceptableColor = closestTo
+        var contrastLighter = calculateContrastRatio(color1: forBackground, color2: lighterAcceptableColor)
+        var contrastDarker = calculateContrastRatio(color1: forBackground, color2: darkerAcceptableColor)
+        while(contrastLighter < 6 && contrastDarker < 6) {
+            lighterAcceptableColor = lighterAcceptableColor.lighter(by:10)!
+            darkerAcceptableColor = darkerAcceptableColor.darker(by:10)!
+            contrastLighter = calculateContrastRatio(color1: forBackground, color2: lighterAcceptableColor)
+            contrastDarker = calculateContrastRatio(color1: forBackground, color2: darkerAcceptableColor)
+        }
+
+        if(contrastLighter>=6){
+            return lighterAcceptableColor
+        }
+        return darkerAcceptableColor
+
+    }
+
 }

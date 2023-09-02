@@ -41,14 +41,14 @@ struct AboutView: View {
                 Button(action: {
                     delegate.showWelcomeTutorial()
                 }) {
-                    Text("View welcome tutorial")
+                    Text("Show welcome tutorial")
                 }
             
             HStack {
-                Text("Bug or Feature?")
+                Text("Bug or feature request?")
 
                 Button(action: {
-                    if let url = URL(string: "https://www.georgegillams.co.uk/contact") {
+                    if let url = URL(string: "https://www.georgegillams.co.uk/contraster-feedback") {
                         NSWorkspace.shared.open(url)
                     }
                 }) {

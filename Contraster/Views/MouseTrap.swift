@@ -13,7 +13,7 @@ struct MouseTrap: View {
     init(appModel: AppModel) {
         self.appModel = appModel
     }
-    
+
     var body: some View {
         ZStack {
             if(appModel.pickingMode != .notPicking) {
