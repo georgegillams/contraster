@@ -18,45 +18,47 @@ struct ContrastResults: View {
     }
     
     var body: some View {
-        HStack(alignment: .center) {
-            ZStack(alignment: .bottomTrailing) {
-                HStack {
-                    VStack {
-                        ColourPreview(color: model.color1).frame(maxWidth: .infinity, alignment: .leading)
-                        ColourPreview(color: model.color2).frame(maxWidth: .infinity, alignment: .leading)
-                    }.frame(width: 90)
-                    JoiningLine().frame(width: 18, height: 28)
+        CardView {
+            HStack(alignment: .center) {
+                ZStack(alignment: .bottomTrailing) {
                     HStack {
-                        Text(model.contrastRatio ?? "...").lineLimit(1).layoutPriority(1)
-                        Line().frame(width: .infinity)
-                    }.frame(width: 62, alignment: .leading)
-                    HStack {
-                        ContrastResult(elementType: .largeText, level: model.complianceLevelLgText).frame(alignment: .leading).layoutPriority(1)
-                        Line().frame(maxWidth: .infinity)
-                    }.frame(width: 82, alignment: .leading)
-                    HStack {
-                        ContrastResult(elementType: .smallText, level: model.complianceLevelSmText).frame(alignment: .leading).layoutPriority(1)
-                        Line().frame(maxWidth: .infinity)
-                    }.frame(width: 82, alignment: .leading)
-                    ContrastResult(elementType: .graphical, level: model.complianceLevelGraphical).frame(width: 58, alignment: .leading)
-                    if let deleteFunction = onDelete {
-
+                        VStack(spacing:0) {
+                            ColourPreview(color: model.color1, foregroundColor: model.color1Foreground)
+                            ColourPreview(color: model.color2, foregroundColor: model.color2Foreground)
+                        }.frame(width: 70).cornerRadius(4)
+                        Spacer().frame(width: 18, height: 28)
                         HStack {
-                            Button(role: nil, action: {
-                                deleteFunction()
-                            }) {
-                                Image(systemName: "trash").foregroundColor(.secondary)
-                            }.buttonStyle(.plain)
-                        }.opacity(showControls ? 1 : 0).padding(.trailing, 4)
+                            Text(model.contrastRatio ?? "…").lineLimit(1).layoutPriority(1)
+                            Spacer().frame(width: .infinity)
+                        }.frame(width: 62, alignment: .leading)
+                        HStack {
+                            ContrastResult(elementType: .largeText, level: model.complianceLevelLgText).frame(alignment: .leading).layoutPriority(1)
+                            Spacer().frame(maxWidth: .infinity)
+                        }.frame(width: 82, alignment: .leading)
+                        HStack {
+                            ContrastResult(elementType: .smallText, level: model.complianceLevelSmText).frame(alignment: .leading).layoutPriority(1)
+                            Spacer().frame(maxWidth: .infinity)
+                        }.frame(width: 82, alignment: .leading)
+                        ContrastResult(elementType: .graphical, level: model.complianceLevelGraphical).frame(width: 58, alignment: .leading)
+                        if let deleteFunction = onDelete {
+
+                            HStack {
+                                Button(role: nil, action: {
+                                    deleteFunction()
+                                }) {
+                                    Image(systemName: "trash").foregroundColor(Color("DangerColor"))
+                                }.buttonStyle(.plain)
+                            }.padding(.trailing, 4)
+                        }
                     }
+                    //            HStack {
+                    //                Text(model.pickId).font(.footnote).foregroundColor(.secondary)
+                    //                Text("21/09/2022").font(.footnote).foregroundColor(.secondary).opacity(showControls ? 1 : 0)
+                    //            }
                 }
-                //            HStack {
-                //                Text(model.pickId).font(.footnote).foregroundColor(.secondary)
-                //                Text("21/09/2022").font(.footnote).foregroundColor(.secondary).opacity(showControls ? 1 : 0)
-                //            }
-            }
-            Spacer(minLength: 0)
-        }.frame(maxWidth: .infinity).onHover(perform: {isMouseOver in
+                Spacer(minLength: 0)
+            }.frame(maxWidth: .infinity)
+        }.onHover(perform: {isMouseOver in
             showControls = isMouseOver
         })
     }

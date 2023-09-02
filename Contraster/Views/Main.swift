@@ -22,37 +22,49 @@ struct Main: View {
             ZStack(alignment: .bottomTrailing) {
                 VStack(alignment: .leading, spacing: 10) {
                     HStack {
-                        Text(appModel.pickingMode != .notPicking ? "Current pick" : "Not picking")
-                            .font(Font.system(size:24))
-                            .padding(.bottom, 10)
+                        VStack(alignment: .leading, spacing: 8) {
+                            
+                            Text(appModel.pickingMode != .notPicking ? "Current pick" : "Not picking")
+                                .font(Font.system(size:24))
+                            Text(appModel.pickingMode != .notPicking ? "Click anywhere on screen to select the next colour" : "Click the picker button to get started")
+                        }
                         Spacer()
-                        GButton(role: nil, action: {
-                            if (appModel.pickingMode == .notPicking) {
-                                appModel.createNewPick()
-                                delegate.updateMouseTrapWindow()
-                            } else {
-                                appModel.cancelPick()
-                                delegate.updateMouseTrapWindow()
-                            }
-                        }) {
-                            Image(systemName: "eyedropper.halffull").foregroundColor(Color.white)
-                            Text(appModel.pickingMode == .notPicking ? "New pick" : "Cancel").foregroundColor(Color.white)
-                        }.bgColor(appModel.pickingMode == .notPicking ? Color.blue : Color.red)
+                        HStack(spacing: 4) {
+                            GButton(role: nil, action: {
+                                delegate.togglePopover(delegate.statusBarItem.button)
+                                delegate.openMenu()
+                            }) {
+                                Image(systemName: "gear").foregroundColor(Color.white).font(.system(size: 18))
+
+                            }.bgColor(Color(hex: "#5E5E5E")!).accessibilityLabel("Open menu")
+                            
+                            
+                            GButton(role: nil, action: {
+                                if (appModel.pickingMode == .notPicking) {
+                                    appModel.createNewPick()
+                                    delegate.updateMouseTrapWindow()
+                                } else {
+                                    appModel.cancelPick()
+                                    delegate.updateMouseTrapWindow()
+                                }
+                            }) {
+                                Image(systemName: "eyedropper.halffull").foregroundColor(Color.white)
+                                Text(appModel.pickingMode == .notPicking ? "New pick" : "Cancel").foregroundColor(Color.white)
+                            }.bgColor(appModel.pickingMode == .notPicking ? Color("CTABackgroundColor") : Color("DangerColor"))
+                        }
                     }.frame( alignment: .center)
-                    Text(appModel.pickingMode != .notPicking ? "Click anywhere on screen to select the next colour" : "Click the picker button to get started")
-                        .padding(.bottom, 20)
-                    
+
                     ContrastResultsAnimated(model: appModel.currentResult, onDelete: nil)
-                    
-                    Text("History")
-                        .font(Font.system(size:24))
-                        .padding(.bottom, 10)
-                    if (appModel.resultsList.isEmpty) {
-                        Text("No results here yet!").frame(maxWidth: .infinity)
-                        Text("To add results here, simply start picking colours.").frame(maxWidth: .infinity)
-                    }
+                    Line()
                     ScrollView() {
-                        VStack(alignment: .leading, spacing: 40) {
+                        VStack(alignment: .leading, spacing: 24) {
+                            Text("History")
+                                .font(Font.system(size:24))
+                                .padding(.bottom, 4)
+                            if (appModel.resultsList.isEmpty) {
+                                Text("No results yet!").frame(maxWidth: .infinity)
+                                Text("Once you start picking colours, they'll show up here.").frame(maxWidth: .infinity)
+                            }
                             ForEach(appModel.resultsList) { result in
                                 ContrastResultsAnimated(model: result, onDelete: {
                                     appModel.deleteColourPair(pickId: result.pickId)
@@ -61,14 +73,10 @@ struct Main: View {
                         }.frame(maxWidth: .infinity)
                     }
                 }.padding(EdgeInsets(top: 12, leading: 12, bottom: 0, trailing: 12))
-                Button(role: nil, action: {
-                    delegate.openMenu()
-                }) {
-                    Image(systemName: "gear").foregroundColor(Color.white)
-                }.accessibilityLabel("Open menu").buttonStyle(.plain).padding(EdgeInsets(top: 0, leading: 0, bottom: 4, trailing: 4))
+                
             }
         }
-            .frame(minWidth: 500, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .center)
+        .frame(minWidth: 500, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .center)
     }
 }
 

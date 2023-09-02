@@ -11,9 +11,9 @@ class ContrastResultHelpers {
     static func textForElementType(elementType: ElementType) -> String {
         switch elementType {
         case .largeText:
-            return "Lg:"
+            return "Lg"
         case .smallText:
-            return "Sm:"
+            return "Sm"
         case .graphical:
             return "☂️"
         }
@@ -26,20 +26,20 @@ class ContrastResultHelpers {
         case .passAA:
             return "AA"
         case .fail:
-            return "❌"
+            return "Fail"
         case .pending:
-            return "..."
+            return "…"
         }
     }
     
     static func colorForComplianceLevel(complianceLevel: ComplianceLevel) -> Color {
         switch complianceLevel {
         case .passAAA:
-            return Color.green
+            return Color("PositiveColor")
         case .passAA:
-            return Color.green
+            return Color("PositiveColor")
         case .fail:
-            return Color.red
+            return Color("DangerColor")
         case .pending:
             return Color.primary
         }
@@ -52,9 +52,17 @@ struct ContrastResult: View {
     var level: ComplianceLevel
     
     var body: some View {
-        HStack {
-            Text(ContrastResultHelpers.textForElementType(elementType: elementType)).lineLimit(1)
-            Text(ContrastResultHelpers.textForComplianceLevel(complianceLevel: level)).foregroundColor(ContrastResultHelpers.colorForComplianceLevel(complianceLevel: level)).lineLimit(1)
+        HStack(spacing: 4) {
+            if(elementType == .graphical) {
+                Image(systemName: "theatermask.and.paintbrush")
+            } else {
+                Text(ContrastResultHelpers.textForElementType(elementType: elementType)).lineLimit(1)
+            }
+            if(level == .fail) {
+                Image(systemName: "exclamationmark.triangle.fill").foregroundColor(ContrastResultHelpers.colorForComplianceLevel(complianceLevel: level))
+            } else {
+                Text(ContrastResultHelpers.textForComplianceLevel(complianceLevel: level)).foregroundColor(ContrastResultHelpers.colorForComplianceLevel(complianceLevel: level)).fontWeight(.bold).lineLimit(1)
+            }
         }
     }
 }
