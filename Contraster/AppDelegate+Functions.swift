@@ -61,6 +61,9 @@ extension AppDelegate {
     }
     
     func removeMouseObserver() {
+        DispatchQueue.main.async {
+            NSCursor.pop()
+        }
         if(mouseMoveMonitor != nil) {
             NSEvent.removeMonitor(mouseMoveMonitor!)
             mouseMoveMonitor = nil
@@ -72,8 +75,17 @@ extension AppDelegate {
     }
     
     func addMouseObserver() {
-        // Play it safe and ensure no observers are active:
-        removeMouseObserver()
+        if(mouseMoveMonitor != nil && mouseClickMonitor != nil) {
+            // both monitors already exist, so nothing to do
+            return
+        } else if (mouseMoveMonitor == nil || mouseClickMonitor == nil) {
+            // one of the monitors is nil, so we'll reset them all
+            removeMouseObserver()
+        }
+
+        DispatchQueue.main.async {
+            NSCursor.crosshair.push()
+        }
         
         mouseMoveMonitor = NSEvent.addLocalMonitorForEvents(matching: [.mouseMoved]) {
             // TODO: FIND MEMORY LEAK IN HERE
@@ -82,7 +94,7 @@ extension AppDelegate {
             if (self.appModel.pickingMode == .notPicking) {
                 return $0
             }
-            
+
             var mouseLocation: NSPoint { NSEvent.mouseLocation }
             
             let mouseTrapFrame = NSRect(x: mouseLocation.x - InterfaceConstants.mouseTrapRectSize.width/2, y: mouseLocation.y - InterfaceConstants.mouseTrapRectSize.height/2, width: InterfaceConstants.mouseTrapRectSize.width, height: InterfaceConstants.mouseTrapRectSize.height)
