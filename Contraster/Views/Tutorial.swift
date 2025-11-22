@@ -20,11 +20,20 @@ struct BackButton: View {
 
 struct TutorialPart1: View {
     var forwardButtonAction: () -> Void
-
+    var delegate: AppDelegate = NSApp.delegate as! AppDelegate
+    
+    @State private var hasPermissions: Bool = false
+    @State private var permissionCheckTimer: Timer?
+    
     var body: some View {
         HStack(spacing: 40){
             VStack(alignment: .leading, spacing: 10){
-                Text("Before you get started, you'll need to enable screen-recording permission.")
+                if hasPermissions {
+                    Text("Screen recording permission granted ✓")
+                        .foregroundColor(.green)
+                } else {
+                    Text("Before you get started, you'll need to enable screen-recording permission.")
+                }
                 Text("This allows you to capture the colour from a single pixel on the screen. We don't do anything creepy with the image on your screen, and it will never leave your device.")
             }.frame(width: 300)
             Image("grant-permission-1")
@@ -33,11 +42,40 @@ struct TutorialPart1: View {
                 .frame(width: 340, height: 200)
         }
         Spacer()
-        HStack {
-            GButton(role: nil, action: forwardButtonAction) {
-                Text("Ok — grant permission").foregroundColor(.white)
+        HStack(spacing: 12) {
+            if hasPermissions {
+                GButton(role: nil, action: {
+                    delegate.openScreenRecordingPreferences()
+                }) {
+                    Text("Manage permissions").foregroundColor(.white)
+                }.bgColor(.gray)
+                GButton(role: nil, action: forwardButtonAction) {
+                    Text("Next").foregroundColor(.white)
+                }
+            } else {
+                GButton(role: nil, action: {
+                    delegate.checkScreenRecordingPermissions()
+                }) {
+                    Text("Grant permissions").foregroundColor(.white)
+                }
             }
         }
+        .onAppear {
+            // Check permissions immediately
+            checkPermissions()
+            // Re-check permissions every 2 seconds
+            permissionCheckTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { _ in
+                checkPermissions()
+            }
+        }
+        .onDisappear {
+            permissionCheckTimer?.invalidate()
+            permissionCheckTimer = nil
+        }
+    }
+    
+    private func checkPermissions() {
+        hasPermissions = delegate.hasScreenRecordingPermissions()
     }
 }
 
@@ -180,7 +218,6 @@ struct Tutorial: View {
             if(stage == 0) {
                 TutorialPart1(forwardButtonAction: {
                     stage += 1
-                    delegate.triggerSystemPermissionDialog()
                 })
             }
             if(stage == 1) {
