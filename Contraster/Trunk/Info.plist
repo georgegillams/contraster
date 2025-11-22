@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>LSApplicationCategoryType</key>
-	<string>public.app-category.utilities</string>
-	<key>LSUIElement</key>
-	<true/>
-</dict>
+	<dict>
+		<key>LSApplicationCategoryType</key>
+		<string>public.app-category.utilities</string>
+		<key>LSUIElement</key>
+		<true />
+		<key>NSScreenCaptureUsageDescription</key>
+		<string>Contraster needs screen recording permission to capture colours from your screen.
+			This allows you to pick colours from any pixel on your display. We don't store or
+			transmit any screen content.</string>
+	</dict>
 </plist>

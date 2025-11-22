@@ -147,36 +147,46 @@ class AppModel: ObservableObject {
     }
     
     func setFirstWelcomeDone() {
-        
-        // TODO: Update existing value instead of inserting new
         let helper = CoreDataHelper()
-        guard let newSettings = NSEntityDescription.insertNewObject(
-                    forEntityName: "Settings",
-                    into: helper.context) as? Settings else { return }
-        newSettings.firstWelcomeDone = true
+        let fr = NSFetchRequest<Settings>(entityName: "Settings")
         
         do {
+            let settings = try helper.context.fetch(fr)
+            let settingsObject: Settings
+            
+            if let existingSettings = settings.first {
+                // Update existing Settings object
+                settingsObject = existingSettings
+            } else {
+                // Create new Settings object if none exists
+                guard let newSettings = NSEntityDescription.insertNewObject(
+                    forEntityName: "Settings",
+                    into: helper.context) as? Settings else {
+                    print("Failed to create new Settings object")
+                    return
+                }
+                settingsObject = newSettings
+            }
+            
+            settingsObject.firstWelcomeDone = true
+            
             try helper.context.save()
         } catch {
-            print("error in saving context")
+            print("Error in setFirstWelcomeDone: \(error)")
         }
     }
     
     func isFirstWelcomeDone() -> Bool {
         let helper = CoreDataHelper()
-        var result = false
-        let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Settings")
+        let fr = NSFetchRequest<Settings>(entityName: "Settings")
+        
         do {
-            if let settings = try helper.context.fetch(fr) as? [Settings] {
-                settings.forEach({ setting in
-                    if(setting.firstWelcomeDone) {
-                        result = true
-                    }
-                })
+            if let settings = try helper.context.fetch(fr).first {
+                return settings.firstWelcomeDone
             }
         } catch {
-            print("Could not read contact fetcher")
+            print("Could not read settings: \(error)")
         }
-        return result
+        return false
     }
 }

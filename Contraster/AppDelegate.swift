@@ -43,9 +43,56 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func hideTutorial() {
         tutorialWindow?.close()
     }
-   
+
+    func hasScreenRecordingPermissions() -> Bool {
+        // Use CGPreflightScreenCaptureAccess() to properly check screen recording permissions
+        // This API is available in macOS 11.0+ (Big Sur and later)
+        // Since deployment target is 12.3, we can safely use this API
+        // This correctly checks if we can capture window content, not just the desktop background
+        if #available(macOS 11.0, *) {
+            return CGPreflightScreenCaptureAccess()
+        } else {
+            // Fallback for older macOS versions (though deployment target is 12.3)
+            // Attempt a test capture - but note this is not fully reliable
+            let mainDisplayID = CGMainDisplayID()
+            let testImage = CGDisplayCreateImage(mainDisplayID, rect: CGRect(x: 0, y: 0, width: 1, height: 1))
+            return testImage != nil
+        }
+    }
+
+    func checkScreenRecordingPermissions() {
+        let hasScreenRecordingPermissions = hasScreenRecordingPermissions()
+
+        if(!hasScreenRecordingPermissions) {
+            triggerSystemPermissionDialog()
+            //  Wait for permissions to change and re-check
+            DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
+                self.checkScreenRecordingPermissions()
+            }
+
+            // Return so that we only check one permission at a time
+            return
+        }
+    }
+
     func triggerSystemPermissionDialog() {
-        CGDisplayCreateImage(NSScreen.main?.displayID ?? 0, rect: NSRect(x: 50, y: 50, width: 1, height: 1))
+        // Use CGRequestScreenCaptureAccess() to properly request screen recording permissions
+        // This will show the system permission dialog if not already granted
+        // Note: The dialog will only appear once per app session if denied
+        if #available(macOS 11.0, *) {
+            CGRequestScreenCaptureAccess()
+        } else {
+            // Fallback for older macOS versions: trigger dialog by attempting capture
+            CGDisplayCreateImage(NSScreen.main?.displayID ?? 0, rect: NSRect(x: 50, y: 50, width: 1, height: 1))
+        }
+    }
+    
+    func openScreenRecordingPreferences() {
+        // Open System Preferences/Settings to Screen Recording privacy pane
+        // This URL scheme works on macOS 10.15+ (Catalina and later)
+        if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture") {
+            NSWorkspace.shared.open(url)
+        }
     }
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -91,7 +138,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
         }
         
-        if(!appModel.isFirstWelcomeDone()) {
+        if(appModel.isFirstWelcomeDone()) {
+            checkScreenRecordingPermissions()
+        } else {
             showWelcomeTutorial()
         }
     }

@@ -23,9 +23,9 @@ extension AppDelegate {
         let version = versionNsObject as! String
         let menu = NSMenu()
         menu.addItem(withTitle: "About Contraster", action: #selector(openAbout), keyEquivalent: "")
-        menu.addItem(withTitle: "Show welcome tutorial", action: #selector(viewOnboarding), keyEquivalent: "")
+        menu.addItem(withTitle: "Show tutorial", action: #selector(viewOnboarding), keyEquivalent: "")
         menu.addItem(withTitle: "Send me feedback", action: #selector(openFeedback), keyEquivalent: "")
-        menu.addItem(withTitle: "Buy me a coffee", action: #selector(openCoffee), keyEquivalent: "")
+        // menu.addItem(withTitle: "Buy me a coffee", action: #selector(openCoffee), keyEquivalent: "")
         menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: "Contraster \(version)", action: nil, keyEquivalent: ""))
         menu.addItem(withTitle: "Quit Contraster", action: #selector(quit), keyEquivalent: "q")
