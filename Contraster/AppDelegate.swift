@@ -22,7 +22,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var mouseTrapUI: MouseTrap? = nil
     var mouseMoveMonitor: Any?
     var mouseClickMonitor: Any?
+    var keyMonitor: Any?
     var appModel = AppModel()
+    var screenshotOverlayWindow: NSWindow? = nil
+    var capturedScreenshots: [NSScreen: NSImage] = [:]
+    var screenshotScreenFrames: [NSScreen: NSRect] = [:]
     
     func showWelcomeTutorial() {
         tutorialUI = Tutorial(appModel: appModel)
@@ -105,9 +109,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         colourPickerWindow.alphaValue = 0
         
         mouseTrapWindow.contentView?.wantsLayer = true
-        mouseTrapWindow.level = .floating
+        mouseTrapWindow.level = .screenSaver // Highest level to stay on top of everything
         mouseTrapWindow.backgroundColor = NSColor.clear
-        mouseTrapWindow.contentView?.layer?.cornerRadius = 25
+        mouseTrapWindow.contentView?.layer?.cornerRadius = 8
         mouseTrapWindow.contentView?.layer?.masksToBounds = true
         mouseTrapWindow.makeKeyAndOrderFront(mouseTrapWindow)
         

@@ -7,6 +7,7 @@
 
 import Cocoa
 import SwiftUI
+import CoreImage
 
 extension AppDelegate {
 
@@ -53,14 +54,14 @@ extension AppDelegate {
 
     @objc func updateMouseTrapWindow() {
         if (self.appModel.pickingMode == .notPicking) {
-            removeMouseObserver()
+            removeMouseAndKeyboardObservers()
             self.mouseTrapWindow.setFrame(NSRect(x: 0, y: 0, width: 0, height: 0), display: true, animate: false)
         } else {
-            addMouseObserver()
+            addMouseAndKeyboardObservers()
         }
     }
 
-    func removeMouseObserver() {
+    func removeMouseAndKeyboardObservers() {
         if(mouseMoveMonitor != nil) {
             NSEvent.removeMonitor(mouseMoveMonitor!)
             mouseMoveMonitor = nil
@@ -69,59 +70,216 @@ extension AppDelegate {
             NSEvent.removeMonitor(mouseClickMonitor!)
             mouseClickMonitor = nil
         }
+        if(keyMonitor != nil) {
+            NSEvent.removeMonitor(keyMonitor!)
+            keyMonitor = nil
+        }
+        cleanupScreenshot()
+    }
+    
+    func captureScreenshot() {
+        // Capture screenshots for all screens
+        capturedScreenshots = [:]
+        screenshotScreenFrames = [:]
+        
+        for screen in NSScreen.screens {
+            let displayID = screen.displayID
+            let screenFrame = screen.frame
+            
+            // Capture the entire screen
+            if let imageRef = CGDisplayCreateImage(displayID) {
+                let screenshot = NSImage(cgImage: imageRef, size: screenFrame.size)
+                capturedScreenshots[screen] = screenshot
+                screenshotScreenFrames[screen] = screenFrame
+            }
+        }
+        
+        // Show overlay window with screenshot
+        showScreenshotOverlay()
+    }
+    
+    func showScreenshotOverlay() {
+        // Clean up existing overlay if any
+        if screenshotOverlayWindow != nil {
+            screenshotOverlayWindow?.close()
+            screenshotOverlayWindow = nil
+        }
+        
+        // Find the screen with the mouse to position the overlay
+        guard let currentScreen = ScreenHelper.getScreenWithMouse(),
+              let screenshot = capturedScreenshots[currentScreen] else { return }
+        
+        let screenFrame = currentScreen.frame
+        
+        // Create overlay window
+        screenshotOverlayWindow = NSWindow(
+            contentRect: screenFrame,
+            styleMask: .borderless,
+            backing: .buffered,
+            defer: false
+        )
+        
+        guard let overlayWindow = screenshotOverlayWindow else { return }
+        
+        overlayWindow.level = .normal - 1 // Below normal windows but above desktop
+        //  overlayWindow.level = .screenSaver // On top of all other windows
+        overlayWindow.backgroundColor = NSColor.clear
+        overlayWindow.isOpaque = false
+        overlayWindow.ignoresMouseEvents = true // Allow clicks to pass through
+        overlayWindow.collectionBehavior = [.canJoinAllSpaces, .stationary]
+//        overlayWindow.canBecomeKey = false
+//        overlayWindow.canBecomeMain = false
+        
+        // Create image view with screenshot
+        let imageView = NSImageView(frame: NSRect(origin: .zero, size: screenFrame.size))
+        
+        // Apply green tint for debugging
+        if let cgImage = screenshot.cgImage(forProposedRect: nil, context: nil, hints: nil) {
+            let ciImage = CIImage(cgImage: cgImage)
+            let filter = CIFilter(name: "CIColorMatrix")
+            filter?.setValue(ciImage, forKey: kCIInputImageKey)
+            filter?.setValue(CIVector(x: 0.9, y: 1.0, z: 0.9, w: 0), forKey: "inputRVector") // Reduce red slightly
+            filter?.setValue(CIVector(x: 0, y: 1, z: 0, w: 0), forKey: "inputGVector") // Keep green
+            filter?.setValue(CIVector(x: 0.9, y: 1.0, z: 0.9, w: 0), forKey: "inputBVector") // Reduce blue slightly
+            filter?.setValue(CIVector(x: 0, y: 0, z: 0, w: 1), forKey: "inputAVector") // Keep alpha
+            filter?.setValue(CIVector(x: 0, y: 0, z: 0, w: 0), forKey: "inputBiasVector")
+            
+            if let outputImage = filter?.outputImage {
+                let context = CIContext()
+                if let outputCGImage = context.createCGImage(outputImage, from: outputImage.extent) {
+                    imageView.image = NSImage(cgImage: outputCGImage, size: screenFrame.size)
+                } else {
+                    imageView.image = screenshot
+                }
+            } else {
+                imageView.image = screenshot
+            }
+        } else {
+            imageView.image = screenshot
+        }
+        
+        imageView.imageScaling = .scaleAxesIndependently
+        
+        overlayWindow.contentView = imageView
+        overlayWindow.setFrame(screenFrame, display: true)
+        overlayWindow.makeKeyAndOrderFront(nil)
+    }
+    
+    func cleanupScreenshot() {
+        screenshotOverlayWindow?.close()
+        screenshotOverlayWindow = nil
+        capturedScreenshots = [:]
+        screenshotScreenFrames = [:]
+        appModel.currentScreenshot = nil
+        appModel.currentScreenFrame = .zero
+        appModel.currentMouseLocation = .zero
+    }
+    
+    func getColorFromScreenshot(at screenPoint: NSPoint) -> NSColor? {
+        guard let currentScreen = ScreenHelper.getScreenWithMouse(),
+              let screenshot = capturedScreenshots[currentScreen],
+              let screenFrame = screenshotScreenFrames[currentScreen] ?? Optional(currentScreen.frame) else {
+            return nil
+        }
+        print("getColorFromScreenshot: \(screenPoint)")
+        print("screenshot: \(screenshot)")
+        print("screenFrame: \(screenFrame)")
+        print("currentScreen: \(currentScreen)")
+        print("capturedScreenshots: \(capturedScreenshots)")
+        print("screenshotScreenFrames: \(screenshotScreenFrames)")
+
+        // Convert screen point to image coordinates
+        // Screen coordinates have origin at bottom-left, but image coordinates have origin at top-left
+        let imageSize = screenshot.size
+        let screenHeight = screenFrame.height
+        
+        // Calculate point relative to screen
+        let relativeX = screenPoint.x - screenFrame.origin.x
+        let relativeY = screenPoint.y - screenFrame.origin.y
+        
+        // Invert Y coordinate for image (screen Y is bottom-up, image Y is top-down)
+        let imageY = screenHeight - relativeY
+        
+        // Convert to image coordinates (accounting for image size vs screen size)
+        let imagePointX = (relativeX / screenFrame.width) * imageSize.width
+        let imagePointY = (imageY / screenFrame.height) * imageSize.height
+        
+        // Ensure coordinates are within bounds
+        guard imagePointX >= 0 && imagePointX < imageSize.width &&
+              imagePointY >= 0 && imagePointY < imageSize.height else {
+            return nil
+        }
+        
+        // Get color from image at this point
+        guard let cgImage = screenshot.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
+            return nil
+        }
+        
+        // Create a bitmap representation
+        let bitmapRep = NSBitmapImageRep(cgImage: cgImage)
+        let color = bitmapRep.colorAt(x: Int(imagePointX), y: Int(imagePointY))
+        
+        return color
     }
 
-    func addMouseObserver() {
-        if(mouseMoveMonitor != nil && mouseClickMonitor != nil) {
-            // both monitors already exist, so nothing to do
+    func addMouseAndKeyboardObservers() {
+        if(mouseMoveMonitor != nil && mouseClickMonitor != nil && keyMonitor != nil) {
+            // all monitors already exist, so nothing to do
             return
-        } else if (mouseMoveMonitor == nil || mouseClickMonitor == nil) {
+        } else if (mouseMoveMonitor == nil || mouseClickMonitor == nil || keyMonitor == nil) {
             // one of the monitors is nil, so we'll reset them all
-            removeMouseObserver()
+            removeMouseAndKeyboardObservers()
         }
 
-        mouseMoveMonitor = NSEvent.addLocalMonitorForEvents(matching: [.mouseMoved]) {
-            // TODO: FIND MEMORY LEAK IN HERE
+        // Capture screenshot when picking starts
+        captureScreenshot()
 
+        mouseMoveMonitor = NSEvent.addLocalMonitorForEvents(matching: [.mouseMoved]) {
             // This shouldn't actually happen, as the monitor should be inactive when not picking.
             if (self.appModel.pickingMode == .notPicking) {
                 return $0
             }
 
             var mouseLocation: NSPoint { NSEvent.mouseLocation }
+            
+            // Update mouse location and screenshot in AppModel
+            self.appModel.currentMouseLocation = mouseLocation
+            if let currentScreen = ScreenHelper.getScreenWithMouse(),
+               let screenshot = self.capturedScreenshots[currentScreen] {
+                self.appModel.currentScreenshot = screenshot
+                self.appModel.currentScreenFrame = self.screenshotScreenFrames[currentScreen] ?? currentScreen.frame
+            }
 
-            let mouseTrapFrame = NSRect(x: mouseLocation.x - InterfaceConstants.mouseTrapRectSize.width/2, y: mouseLocation.y - InterfaceConstants.mouseTrapRectSize.height/2, width: InterfaceConstants.mouseTrapRectSize.width, height: InterfaceConstants.mouseTrapRectSize.height)
+            // Update window size to accommodate magnification region (300x200) plus circles
+            let windowWidth = max(InterfaceConstants.magnificationWidth, InterfaceConstants.mouseTrapRectSize.width)
+            let windowHeight = max(InterfaceConstants.magnificationHeight, InterfaceConstants.mouseTrapRectSize.height)
+            
+            // Position window so that circles are at mouse cursor, with magnification above
+            // The circles are at the bottom of the VStack (50px high), so center them on mouse
+            // Window y coordinate is bottom-left, so position bottom at mouseY - circleHeight/2
+            let circleHeight = InterfaceConstants.mouseTrapRectSize.height
+            let mouseTrapFrame = NSRect(
+                x: mouseLocation.x - windowWidth/2,
+                y: mouseLocation.y - windowHeight/2,
+                width: windowWidth,
+                height: windowHeight
+            )
             self.mouseTrapWindow.setFrame(mouseTrapFrame, display: true, animate: false)
 
-            let currentScreen = ScreenHelper.getScreenWithMouse()
-            let displayID = currentScreen?.displayID ?? CGMainDisplayID()
-            let screenHeight = currentScreen?.frame.size.height
-
-            if(self.pixelConverterWindow.frame != currentScreen?.frame) {
-                self.pixelConverterWindow.setFrameOrigin(currentScreen!.frame.origin)
-                self.pixelConverterWindow.setContentSize(currentScreen!.frame.size)
-            }
-
-            let mousePositionWithinScreen = self.pixelConverterWindow.convertPoint(fromScreen: mouseLocation)
-            let mousePositionWithinScreenInvertedY = (screenHeight ?? 0) - mousePositionWithinScreen.y
-            // Comment AD+F_102
-            // We read the pixel that is 2 pixels away from the mouse cursor. This is to avoid reading the value of the MouseTrap UI, and ensure we instead read the colour that is just left of the mouse
-            // See Comment MT_21 for more information
-            let colourPickingPixelFrame = NSRect(x: max(0, mousePositionWithinScreen.x - 2), y: max(0, mousePositionWithinScreenInvertedY - 2), width: 1, height: 1)
-
-            let imageRef = CGDisplayCreateImage(displayID, rect: colourPickingPixelFrame)
-            if imageRef == nil {
+            // Read color from screenshot instead of live screen
+            // We read the pixel that is 2 pixels to the left of the mouse cursor to avoid reading the MouseTrap UI
+            let colorPickingPoint = NSPoint(x: mouseLocation.x, y: mouseLocation.y)
+            
+            guard let nsColor = self.getColorFromScreenshot(at: colorPickingPoint) else {
                 return $0
             }
-            let bitmapImageRef = NSBitmapImageRep(cgImage: imageRef!)
-            let color = bitmapImageRef.colorAt(x: 0, y: 0)?.cgColor
-            if (color == nil ) {
-                return $0
-            }
+            
+            let cgColor = nsColor.cgColor
+            
             if(self.appModel.pickingMode == .pickingFirstColor) {
-                self.appModel.updateFirstColor(color: Color(cgColor: color!))
-            }else if ( self.appModel.pickingMode == .pickingSecondColor) {
-                self.appModel.updateSecondColor(color: Color(cgColor: color!))
+                self.appModel.updateFirstColor(color: Color(cgColor: cgColor))
+            } else if (self.appModel.pickingMode == .pickingSecondColor) {
+                self.appModel.updateSecondColor(color: Color(cgColor: cgColor))
             }
             return $0
         }
@@ -144,6 +302,22 @@ extension AppDelegate {
 
             self.updateMouseTrapWindow()
 
+            return event
+        }
+        
+        // Add ESC key monitor to cancel picking
+        keyMonitor = NSEvent.addLocalMonitorForEvents(matching: [.keyDown]) { event in
+            if (self.appModel.pickingMode == .notPicking) {
+                return event
+            }
+            
+            // Check if ESC key was pressed
+            if event.keyCode == 53 { // ESC key code
+                self.appModel.cancelPick()
+                self.updateMouseTrapWindow()
+                return nil // Consume the event
+            }
+            
             return event
         }
     }
