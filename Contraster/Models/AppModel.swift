@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Foundation
+import AppKit
 
 enum PickingMode {
     case notPicking
@@ -20,6 +21,9 @@ class AppModel: ObservableObject {
     @Published var currentResult: ResultsModel?
     @Published var resultsList = [ResultsModel]()
     @Published var pickingMode: PickingMode = .notPicking
+    @Published var currentMouseLocation: NSPoint = .zero
+    @Published var currentScreenshot: NSImage?
+    @Published var currentScreenFrame: NSRect = .zero
     
     init() {
 //        CoreDataHelper().dropAllData()
