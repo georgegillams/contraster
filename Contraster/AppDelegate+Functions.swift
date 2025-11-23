@@ -54,8 +54,11 @@ extension AppDelegate {
 
     @objc func updateMouseTrapWindow() {
         if (self.appModel.pickingMode == .notPicking) {
-            removeMouseAndKeyboardObservers()
-            self.mouseTrapWindow.setFrame(NSRect(x: 0, y: 0, width: 0, height: 0), display: true, animate: false)
+            // Defer cleanup to next run loop to avoid removing monitors while they're executing
+            DispatchQueue.main.async {
+                self.removeMouseAndKeyboardObservers()
+                self.mouseTrapWindow.setFrame(NSRect(x: 0, y: 0, width: 0, height: 0), display: true, animate: false)
+            }
         } else {
             addMouseAndKeyboardObservers()
         }
@@ -181,12 +184,12 @@ extension AppDelegate {
               let screenFrame = screenshotScreenFrames[currentScreen] ?? Optional(currentScreen.frame) else {
             return nil
         }
-        print("getColorFromScreenshot: \(screenPoint)")
-        print("screenshot: \(screenshot)")
-        print("screenFrame: \(screenFrame)")
-        print("currentScreen: \(currentScreen)")
-        print("capturedScreenshots: \(capturedScreenshots)")
-        print("screenshotScreenFrames: \(screenshotScreenFrames)")
+        // print("getColorFromScreenshot: \(screenPoint)")
+        // print("screenshot: \(screenshot)")
+        // print("screenFrame: \(screenFrame)")
+        // print("currentScreen: \(currentScreen)")
+        // print("capturedScreenshots: \(capturedScreenshots)")
+        // print("screenshotScreenFrames: \(screenshotScreenFrames)")
 
         // Convert screen point to image coordinates
         // Screen coordinates have origin at bottom-left, but image coordinates have origin at top-left
@@ -300,7 +303,10 @@ extension AppDelegate {
                 self.appModel.captureSecondColor()
             }
 
-            self.updateMouseTrapWindow()
+            // Defer window update to avoid removing monitors while handler is executing
+            DispatchQueue.main.async {
+                self.updateMouseTrapWindow()
+            }
 
             return event
         }
@@ -314,7 +320,10 @@ extension AppDelegate {
             // Check if ESC key was pressed
             if event.keyCode == 53 { // ESC key code
                 self.appModel.cancelPick()
-                self.updateMouseTrapWindow()
+                // Defer window update to avoid removing monitors while handler is executing
+                DispatchQueue.main.async {
+                    self.updateMouseTrapWindow()
+                }
                 return nil // Consume the event
             }
             
