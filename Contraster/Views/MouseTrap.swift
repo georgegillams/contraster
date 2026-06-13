@@ -15,9 +15,6 @@ struct MouseTrap: View {
         self.appModel = appModel
     }
     
-    // Magnification region size
-    private let magnificationScale: CGFloat = 3.0 // How much to zoom in
-    
     var body: some View {
             if(appModel.pickingMode != .notPicking) {
                 ZStack {
@@ -31,7 +28,7 @@ struct MouseTrap: View {
                         mouseLocation: appModel.currentMouseLocation,
                         magnificationWidth: InterfaceConstants.magnificationWidth,
                         magnificationHeight: InterfaceConstants.magnificationHeight,
-                        magnificationScale: magnificationScale
+                        magnificationScale: appModel.magnificationScale
                     )
                     .frame(width: InterfaceConstants.magnificationWidth, height: InterfaceConstants.magnificationHeight)
                     .clipShape(RoundedRectangle(cornerRadius: 16))

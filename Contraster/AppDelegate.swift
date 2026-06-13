@@ -22,7 +22,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var mouseTrapUI: MouseTrap? = nil
     var mouseMoveMonitor: Any?
     var mouseClickMonitor: Any?
+    var scrollMonitor: Any?
     var keyMonitor: Any?
+    var scrollWheelAccumulator: CGFloat = 0
     var appModel = AppModel()
     var screenshotOverlayWindow: NSWindow? = nil
     var capturedScreenshots: [CGDirectDisplayID: NSImage] = [:]
