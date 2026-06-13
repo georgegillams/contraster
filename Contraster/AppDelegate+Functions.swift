@@ -532,6 +532,28 @@ extension AppDelegate {
         }
     }
 
+    private static let popoverAndPickPopoverDelay: TimeInterval = 0.5
+    private static let popoverAndPickPickDelay: TimeInterval = 0.5
+
+    func openPopoverAndStartPick() {
+        let popoverDelay = Self.popoverAndPickPopoverDelay
+        let pickDelay = Self.popoverAndPickPickDelay
+
+        gDebugPrint("openPopoverAndStartPick: waiting \(popoverDelay)s before opening popover")
+        DispatchQueue.main.asyncAfter(deadline: .now() + popoverDelay) {
+            self.checkScreenRecordingPermissions()
+            gDebugPrint("openPopoverAndStartPick: opening popover")
+            self.showPopover()
+
+            gDebugPrint("openPopoverAndStartPick: waiting \(pickDelay)s before starting pick")
+            DispatchQueue.main.asyncAfter(deadline: .now() + pickDelay) {
+                gDebugPrint("openPopoverAndStartPick: starting pick")
+                self.appModel.createNewPick()
+                self.updateMouseTrapWindow()
+            }
+        }
+    }
+
     func showPopover() {
         guard let sbutton = statusBarItem.button,
               let contentView = colourPickerWindow.contentView else { return }
@@ -557,7 +579,9 @@ extension AppDelegate {
         let event = NSApp.currentEvent!
 
         if event.type == NSEvent.EventType.leftMouseUp {
-            if popover.isShown {
+            if event.modifierFlags.contains(.option) {
+                openPopoverAndStartPick()
+            } else if popover.isShown {
                 popover.performClose(sender)
                 self.appModel.cancelPick()
                 updateMouseTrapWindow()

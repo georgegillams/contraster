@@ -143,22 +143,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func runDebugStartupSequence() {
-        let popoverDelay: TimeInterval = 0.5
-        let pickDelay: TimeInterval = 0.5
-
-        gDebugPrint("runDebugStartupSequence: waiting \(popoverDelay)s before opening popover")
-        DispatchQueue.main.asyncAfter(deadline: .now() + popoverDelay) {
-            self.checkScreenRecordingPermissions()
-            gDebugPrint("runDebugStartupSequence: opening popover")
-            self.showPopover()
-
-            gDebugPrint("runDebugStartupSequence: waiting \(pickDelay)s before starting pick")
-            DispatchQueue.main.asyncAfter(deadline: .now() + pickDelay) {
-                gDebugPrint("runDebugStartupSequence: starting pick")
-                self.appModel.createNewPick()
-                self.updateMouseTrapWindow()
-            }
-        }
+        openPopoverAndStartPick()
     }
     
     
