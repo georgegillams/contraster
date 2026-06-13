@@ -13,9 +13,22 @@ struct ColourPreview: View {
 
     var body: some View {
         ZStack {
-            Rectangle().fill(color ?? Color.clear).frame(width: 70, height: 18, alignment: .leading)
-            Text(color?.hexString ?? "…").background(.clear).foregroundColor(foregroundColor ?? Color.black)
-        }.frame(width: 70, height: 18)
+            Rectangle()
+                .fill(color ?? Color.clear)
+                .frame(
+                    width: InterfaceConstants.popoverSwatchWidth,
+                    height: InterfaceConstants.popoverSwatchRowHeight,
+                    alignment: .leading
+                )
+            Text(color?.hexString ?? "…")
+                .font(InterfaceConstants.popoverSwatchFont)
+                .background(.clear)
+                .foregroundColor(foregroundColor ?? Color.black)
+        }
+        .frame(
+            width: InterfaceConstants.popoverSwatchWidth,
+            height: InterfaceConstants.popoverSwatchRowHeight
+        )
     }
 }
 
@@ -27,5 +40,3 @@ struct ColourPreview_Previews: PreviewProvider {
         ColourPreview(color: Color.purple, foregroundColor: Color.black)
     }
 }
-
-

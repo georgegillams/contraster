@@ -105,10 +105,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         // Create a popover
         let popover = NSPopover()
-        popover.contentSize = NSSize(width: 300, height: 300)
         popover.behavior = .applicationDefined
-        // Embed our SwiftUI view into the popover
-        popover.contentViewController = NSHostingController(rootView: mainUI)
+        let hostingController = NSHostingController(rootView: mainUI)
+        if #available(macOS 13.0, *) {
+            hostingController.sizingOptions = [.intrinsicContentSize]
+        }
+        configurePopoverContentView(hostingController.view)
+        popover.contentViewController = hostingController
+        popover.contentSize = NSSize(
+            width: InterfaceConstants.popoverWidth,
+            height: InterfaceConstants.popoverMaxHeight
+        )
         // Register it
         self.popover = popover
         self.popover.contentViewController?.view.window?.becomeKey()

@@ -55,13 +55,22 @@ struct ContrastResult: View {
         HStack(spacing: 4) {
             if(elementType == .graphical) {
                 Image(systemName: "theatermask.and.paintbrush")
+                    .font(InterfaceConstants.popoverResultFont)
             } else {
-                Text(ContrastResultHelpers.textForElementType(elementType: elementType)).lineLimit(1)
+                Text(ContrastResultHelpers.textForElementType(elementType: elementType))
+                    .font(InterfaceConstants.popoverResultFont)
+                    .lineLimit(1)
             }
             if(level == .fail) {
-                Image(systemName: "exclamationmark.triangle.fill").foregroundColor(ContrastResultHelpers.colorForComplianceLevel(complianceLevel: level))
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .font(InterfaceConstants.popoverResultFont)
+                    .foregroundColor(ContrastResultHelpers.colorForComplianceLevel(complianceLevel: level))
             } else {
-                Text(ContrastResultHelpers.textForComplianceLevel(complianceLevel: level)).foregroundColor(ContrastResultHelpers.colorForComplianceLevel(complianceLevel: level)).fontWeight(.bold).lineLimit(1)
+                Text(ContrastResultHelpers.textForComplianceLevel(complianceLevel: level))
+                    .font(InterfaceConstants.popoverResultFont)
+                    .foregroundColor(ContrastResultHelpers.colorForComplianceLevel(complianceLevel: level))
+                    .fontWeight(.bold)
+                    .lineLimit(1)
             }
         }
     }

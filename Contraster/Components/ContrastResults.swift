@@ -25,12 +25,18 @@ struct ContrastResults: View {
                         VStack(spacing:0) {
                             ColourPreview(color: model.color1, foregroundColor: model.color1Foreground)
                             ColourPreview(color: model.color2, foregroundColor: model.color2Foreground)
-                        }.frame(width: 70).cornerRadius(4)
+                        }
+                        .frame(width: InterfaceConstants.popoverSwatchWidth)
+                        .cornerRadius(4)
                         Spacer().frame(width: 18, height: 28)
                         HStack {
-                            Text(model.contrastRatio ?? "…").lineLimit(1).layoutPriority(1)
+                            Text(model.contrastRatio ?? "…")
+                                .font(InterfaceConstants.popoverResultFont)
+                                .monospacedDigit()
+                                .lineLimit(1)
+                                .layoutPriority(1)
                             Spacer().frame(width: .infinity)
-                        }.frame(width: 62, alignment: .leading)
+                        }.frame(width: 68, alignment: .leading)
                         HStack {
                             ContrastResult(elementType: .largeText, level: model.complianceLevelLgText).frame(alignment: .leading).layoutPriority(1)
                             Spacer().frame(maxWidth: .infinity)
@@ -46,7 +52,9 @@ struct ContrastResults: View {
                                 Button(role: nil, action: {
                                     deleteFunction()
                                 }) {
-                                    Image(systemName: "trash").foregroundColor(Color("DangerColor"))
+                                    Image(systemName: "trash")
+                                        .font(InterfaceConstants.popoverBodyFont)
+                                        .foregroundColor(Color("DangerColor"))
                                 }.buttonStyle(.plain)
                             }.padding(.trailing, 4)
                         }

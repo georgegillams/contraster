@@ -603,6 +603,40 @@ extension AppDelegate {
         }
     }
 
+    func configurePopoverContentView(_ view: NSView) {
+        view.wantsLayer = true
+        view.layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
+    }
+
+    func configurePopoverSurface() {
+        guard let contentView = popover.contentViewController?.view else { return }
+
+        configurePopoverContentView(contentView)
+
+        if let frameView = contentView.superview {
+            frameView.wantsLayer = true
+            frameView.layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
+        }
+
+        if let window = contentView.window {
+            window.backgroundColor = NSColor.windowBackgroundColor
+            window.isOpaque = true
+        }
+    }
+
+    func updatePopoverContentSize() {
+        guard popover.isShown,
+              let view = popover.contentViewController?.view else { return }
+
+        view.layoutSubtreeIfNeeded()
+        let fittingHeight = ceil(view.fittingSize.height)
+        let height = min(
+            max(fittingHeight, InterfaceConstants.popoverMinHeight),
+            InterfaceConstants.popoverMaxHeight
+        )
+        popover.contentSize = NSSize(width: InterfaceConstants.popoverWidth, height: height)
+    }
+
     func showPopover() {
         guard let sbutton = statusBarItem.button,
               let contentView = colourPickerWindow.contentView else { return }
@@ -622,6 +656,10 @@ extension AppDelegate {
         NSApplication.shared.presentationOptions = []
         NSApp.activate(ignoringOtherApps: true)
         popover.show(relativeTo: contentView.frame, of: contentView, preferredEdge: NSRectEdge.minY)
+        DispatchQueue.main.async {
+            self.configurePopoverSurface()
+            self.updatePopoverContentSize()
+        }
     }
 
     @objc func togglePopover(_ sender: AnyObject?) {

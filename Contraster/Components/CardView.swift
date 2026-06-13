@@ -1,5 +1,5 @@
 //
-//  GButton.swift
+//  CardView.swift
 //  Contraster
 //
 //  Created by George Gillams on 26/09/2022.
@@ -15,10 +15,22 @@ struct CardView<Content> : View where Content : View {
     }
 
     var body: some View {
-        HStack{
+        HStack {
             content()
-        }.padding(8).background(.background).cornerRadius(8)
-//            .shadow(color: .primary, radius: 5, x: 2, y: 2)
+        }
+        .padding(10)
+        .background(Color(nsColor: .controlBackgroundColor))
+        .cornerRadius(8)
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .strokeBorder(Color(nsColor: .separatorColor), lineWidth: 0.5)
+        )
+        .shadow(
+            color: Color(nsColor: .shadowColor).opacity(0.22),
+            radius: InterfaceConstants.popoverCardShadowRadius,
+            x: 0,
+            y: 1
+        )
     }
 }
 
@@ -29,5 +41,6 @@ struct CardView_Previews: PreviewProvider {
                 Text("Something")
             }
         }
+        .padding(8)
     }
 }

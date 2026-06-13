@@ -15,68 +15,125 @@ struct Main: View {
         self.appModel = appModel
     }
     
-    @State var currentPage: Int = 0
+    private var isPicking: Bool {
+        appModel.pickingMode != .notPicking
+    }
+
+    private func schedulePopoverSizeUpdate(after delay: TimeInterval) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+            delegate.updatePopoverContentSize()
+        }
+    }
     
     var body: some View {
-        PagerView(pageCount: 1, currentIndex: $currentPage) {
-            ZStack(alignment: .bottomTrailing) {
-                VStack(alignment: .leading, spacing: 10) {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 8) {
-                            
-                            Text(appModel.pickingMode != .notPicking ? "Current pick" : "Not picking")
-                                .font(Font.system(size:24))
-                            Text(appModel.pickingMode != .notPicking ? "Click anywhere on screen to select the next colour" : "Click the picker button to get started")
-                        }
-                        Spacer()
-                        HStack(spacing: 4) {
-                            GButton(role: nil, action: {
-                                delegate.togglePopover(delegate.statusBarItem.button)
-                                delegate.openMenu()
-                            }) {
-                                Image(systemName: "gear").foregroundColor(Color.white).font(.system(size: 18))
+        VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 12) {
+                if isPicking {
+                    Spacer(minLength: 0)
+                        .frame(height: InterfaceConstants.popoverPickingExtraTopPadding)
+                }
 
-                            }.bgColor(Color(hex: "#5E5E5E")!).accessibilityLabel("Open menu")
-                            
-                            
-                            GButton(role: nil, action: {
-                                if (appModel.pickingMode == .notPicking) {
-                                    appModel.createNewPick()
-                                    delegate.updateMouseTrapWindow()
-                                } else {
-                                    appModel.cancelPick()
-                                    delegate.updateMouseTrapWindow()
-                                }
-                            }) {
-                                Image(systemName: "eyedropper.halffull").foregroundColor(Color.white)
-                                Text(appModel.pickingMode == .notPicking ? "New pick" : "Press ESC to cancel").foregroundColor(Color.white)
-                            }.bgColor(appModel.pickingMode == .notPicking ? Color("CTABackgroundColor") : Color("DangerColor"))
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack(spacing: 6) {
+                            Circle()
+                                .fill(isPicking ? Color.accentColor : Color.secondary.opacity(0.5))
+                                .frame(width: 8, height: 8)
+                            Text(isPicking ? "Current pick" : "Ready")
+                                .font(InterfaceConstants.popoverTitleFont)
                         }
-                    }.frame( alignment: .center)
-
-                    ContrastResultsAnimated(model: appModel.currentResult, onDelete: nil)
-                    Line()
-                    ScrollView() {
-                        VStack(alignment: .leading, spacing: 24) {
-                            Text("History")
-                                .font(Font.system(size:24))
-                                .padding(.bottom, 4)
-                            if (appModel.resultsList.isEmpty) {
-                                Text("No results yet!").frame(maxWidth: .infinity)
-                                Text("Once you start picking colours, they'll show up here.").frame(maxWidth: .infinity)
-                            }
-                            ForEach(appModel.resultsList) { result in
-                                ContrastResultsAnimated(model: result, onDelete: {
-                                    appModel.deleteColourPair(pickId: result.pickId)
-                                })
-                            }
-                        }.frame(maxWidth: .infinity)
+                        Text(isPicking
+                             ? "Click anywhere on screen to select the next colour"
+                             : "Click the picker button to get started")
+                            .font(InterfaceConstants.popoverBodyFont)
+                            .foregroundStyle(.secondary)
+                        if isPicking {
+                            Text("Press ESC to cancel")
+                                .font(InterfaceConstants.popoverSecondaryFont)
+                                .foregroundStyle(.secondary)
+                        }
                     }
-                }.padding(EdgeInsets(top: 12, leading: 12, bottom: 0, trailing: 12))
-                
+                    Spacer()
+                    HStack(spacing: 8) {
+                        Button(action: {
+                            delegate.togglePopover(delegate.statusBarItem.button)
+                            delegate.openMenu()
+                        }) {
+                            Image(systemName: "gearshape")
+                                .font(.system(size: 16))
+                        }
+                        .buttonStyle(.borderless)
+                        .controlSize(.large)
+                        .accessibilityLabel("Open menu")
+
+                        if isPicking {
+                            Button(action: {
+                                appModel.cancelPick()
+                                delegate.updateMouseTrapWindow()
+                            }) {
+                                Label("Cancel", systemImage: "xmark")
+                            }
+                            .buttonStyle(.bordered)
+                            .controlSize(.large)
+                            .tint(Color("DangerColor"))
+                        } else {
+                            Button(action: {
+                                appModel.createNewPick()
+                                delegate.updateMouseTrapWindow()
+                            }) {
+                                Label("New pick", systemImage: "eyedropper.halffull")
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .controlSize(.large)
+                            .tint(Color("CTABackgroundColor"))
+                        }
+                    }
+                }
+
+                ContrastResultsAnimated(model: appModel.currentResult)
             }
+            .padding(.bottom, isPicking ? InterfaceConstants.popoverPickingSectionBottomPadding : 0)
+
+            Divider().padding(.vertical, 4)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("History")
+                        .font(InterfaceConstants.popoverTitleFont)
+                        .foregroundStyle(.secondary)
+                        .padding(.bottom, 4)
+                    if appModel.resultsList.isEmpty {
+                        VStack(spacing: 8) {
+                            Image(systemName: "clock.arrow.circlepath")
+                                .font(.system(size: 32))
+                                .foregroundStyle(.secondary)
+                            Text("No results yet")
+                                .font(InterfaceConstants.popoverTitleFont)
+                            Text("Once you start picking colours, they'll show up here.")
+                                .font(InterfaceConstants.popoverBodyFont)
+                                .foregroundStyle(.secondary)
+                                .multilineTextAlignment(.center)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                    }
+                    ForEach(appModel.resultsList) { result in
+                        ContrastResults(model: result, onDelete: {
+                            appModel.deleteColourPair(pickId: result.pickId)
+                        })
+                        .padding(.vertical, InterfaceConstants.popoverCardShadowPadding)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+            }
+            .frame(maxHeight: InterfaceConstants.popoverHistoryMaxHeight)
         }
-        .frame(minWidth: 500, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .center)
+        .padding(16)
+        .frame(width: InterfaceConstants.popoverWidth)
+        .fixedSize(horizontal: false, vertical: true)
+        .background(Color(nsColor: .windowBackgroundColor))
+        .onChange(of: isPicking) { _ in
+            schedulePopoverSizeUpdate(after: 0.05)
+        }
     }
 }
 
@@ -96,4 +153,3 @@ struct Main_Previews: PreviewProvider {
         Main(appModel: exampleAppModel)
     }
 }
-

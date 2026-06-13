@@ -7,41 +7,52 @@
 
 import SwiftUI
 
+private extension AnyTransition {
+    static var currentPickCard: AnyTransition {
+        .asymmetric(
+            insertion: .opacity.combined(with: .offset(y: -10)),
+            removal: .opacity
+        )
+    }
+}
+
 struct ContrastResultsAnimated: View {
     var model: ResultsModel?
-    var onDelete: (() -> Void)?
-    @State var currentResultRenderHeight: CGFloat = 0
-    var currentResultExpandedHeight: CGFloat = 50
-    
+
     var body: some View {
-        VStack{
-            if model != nil {
-                ContrastResults(model: model!, onDelete: onDelete).onAppear {
-                    withAnimation(.linear(duration: 0.2), {currentResultRenderHeight = currentResultExpandedHeight})
-                }.onDisappear {
-                    withAnimation(.linear(duration: 0.2), {currentResultRenderHeight = 0})
-                }
+        Group {
+            if let model {
+                ContrastResults(model: model, onDelete: nil)
+                    .padding(.vertical, InterfaceConstants.popoverCardShadowPadding)
+                    .transition(.currentPickCard)
             }
-        }.frame(height: currentResultRenderHeight).clipped()
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .animation(.easeOut(duration: 0.28), value: model?.pickId)
     }
 }
 
 struct ContrastResultsAnimated_Previews: PreviewProvider {
-    static let exampleData = [
-        ResultsModel(color1: nil, color2: nil),
-        ResultsModel(color1: Color(red: 1, green: 0.2, blue: 0.2), color2: nil),
-        ResultsModel(color1: Color(red: 1, green: 0.2, blue: 0.2), color2: Color(red: 0.2, green: 0.2, blue: 0.8))
-    ]
-    
+    struct PreviewContainer: View {
+        @State private var model: ResultsModel? = nil
+
+        var body: some View {
+            VStack(spacing: 16) {
+                ContrastResultsAnimated(model: model)
+                Button(model == nil ? "Show card" : "Hide card") {
+                    if model == nil {
+                        model = ResultsModel(color1: Color.red, color2: Color.blue)
+                    } else {
+                        model = nil
+                    }
+                }
+            }
+            .padding()
+            .frame(width: 500)
+        }
+    }
+
     static var previews: some View {
-        ContrastResultsAnimated(model: nil, onDelete: {
-            print("Delete")
-        })
-        ContrastResultsAnimated(model: exampleData[0], onDelete: {
-            print("Delete")
-        })
-        ContrastResultsAnimated(model: exampleData[1], onDelete: {
-            print("Delete")
-        })
+        PreviewContainer()
     }
 }
