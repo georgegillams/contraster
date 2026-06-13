@@ -247,18 +247,60 @@ extension AppDelegate {
         return try await SCScreenshotManager.captureImage(contentFilter: filter, configuration: config)
     }
     
+    private func screenshotOverlayDisplayImage(from screenshot: NSImage, screenFrame: NSRect) -> NSImage {
+        guard isGDebugScheme,
+              let cgImage = screenshot.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
+            return screenshot
+        }
+
+        let ciImage = CIImage(cgImage: cgImage)
+        let filter = CIFilter(name: "CIColorMatrix")
+        filter?.setValue(ciImage, forKey: kCIInputImageKey)
+        filter?.setValue(CIVector(x: 0.9, y: 1.0, z: 0.9, w: 0), forKey: "inputRVector") // Reduce red slightly
+        filter?.setValue(CIVector(x: 0, y: 1, z: 0, w: 0), forKey: "inputGVector") // Keep green
+        filter?.setValue(CIVector(x: 0.9, y: 1.0, z: 0.9, w: 0), forKey: "inputBVector") // Reduce blue slightly
+        filter?.setValue(CIVector(x: 0, y: 0, z: 0, w: 1), forKey: "inputAVector") // Keep alpha
+        filter?.setValue(CIVector(x: 0, y: 0, z: 0, w: 0), forKey: "inputBiasVector")
+
+        guard let outputImage = filter?.outputImage else { return screenshot }
+
+        let context = CIContext()
+        guard let outputCGImage = context.createCGImage(outputImage, from: outputImage.extent) else {
+            return screenshot
+        }
+
+        return NSImage(cgImage: outputCGImage, size: screenFrame.size)
+    }
+
+    private func configureScreenshotOverlayImageView(_ imageView: NSImageView, screenFrame: NSRect) {
+        imageView.frame = NSRect(origin: .zero, size: screenFrame.size)
+        imageView.imageScaling = .scaleNone
+        imageView.imageAlignment = .alignCenter
+        imageView.animates = false
+    }
+
     func showScreenshotOverlay() {
-        dismissScreenshotOverlayWindow()
-        
         // Find the screen with the mouse to position the overlay
         guard let currentScreen = ScreenHelper.getScreenWithMouse(),
               let screenshot = capturedScreenshots[currentScreen.displayID] else {
             gDebugPrint("showScreenshotOverlay: no screenshot for current screen (capturedScreenshots.count=\(capturedScreenshots.count))")
             return
         }
-        
+
         let screenFrame = screenshotScreenFrames[currentScreen.displayID] ?? currentScreen.frame
-        
+        let displayImage = screenshotOverlayDisplayImage(from: screenshot, screenFrame: screenFrame)
+
+        if let overlayWindow = screenshotOverlayWindow,
+           let imageView = overlayWindow.contentView as? NSImageView,
+           overlayWindow.frame == screenFrame {
+            imageView.animates = false
+            imageView.image = displayImage
+            gDebugPrint("showScreenshotOverlay: updated existing overlay for screen frame=\(screenFrame)")
+            return
+        }
+
+        dismissScreenshotOverlayWindow()
+
         // Create overlay window
         screenshotOverlayWindow = NSWindow(
             contentRect: screenFrame,
@@ -266,48 +308,22 @@ extension AppDelegate {
             backing: .buffered,
             defer: false
         )
-        
+
         guard let overlayWindow = screenshotOverlayWindow else { return }
-        
+
         overlayWindow.level = .normal - 1 // Below normal windows but above desktop
         //  overlayWindow.level = .screenSaver // On top of all other windows
         overlayWindow.backgroundColor = NSColor.clear
         overlayWindow.isOpaque = false
         overlayWindow.ignoresMouseEvents = true // Allow clicks to pass through
         overlayWindow.collectionBehavior = [.canJoinAllSpaces, .stationary]
-//        overlayWindow.canBecomeKey = false
-//        overlayWindow.canBecomeMain = false
-        
-        // Create image view with screenshot
+        overlayWindow.animationBehavior = .none
+        disableImplicitWindowAnimations(overlayWindow)
+
         let imageView = NSImageView(frame: NSRect(origin: .zero, size: screenFrame.size))
-        
-        // Apply green tint for debugging
-        if let cgImage = screenshot.cgImage(forProposedRect: nil, context: nil, hints: nil) {
-            let ciImage = CIImage(cgImage: cgImage)
-            let filter = CIFilter(name: "CIColorMatrix")
-            filter?.setValue(ciImage, forKey: kCIInputImageKey)
-            filter?.setValue(CIVector(x: 0.9, y: 1.0, z: 0.9, w: 0), forKey: "inputRVector") // Reduce red slightly
-            filter?.setValue(CIVector(x: 0, y: 1, z: 0, w: 0), forKey: "inputGVector") // Keep green
-            filter?.setValue(CIVector(x: 0.9, y: 1.0, z: 0.9, w: 0), forKey: "inputBVector") // Reduce blue slightly
-            filter?.setValue(CIVector(x: 0, y: 0, z: 0, w: 1), forKey: "inputAVector") // Keep alpha
-            filter?.setValue(CIVector(x: 0, y: 0, z: 0, w: 0), forKey: "inputBiasVector")
-            
-            if let outputImage = filter?.outputImage {
-                let context = CIContext()
-                if let outputCGImage = context.createCGImage(outputImage, from: outputImage.extent) {
-                    imageView.image = NSImage(cgImage: outputCGImage, size: screenFrame.size)
-                } else {
-                    imageView.image = screenshot
-                }
-            } else {
-                imageView.image = screenshot
-            }
-        } else {
-            imageView.image = screenshot
-        }
-        
-        imageView.imageScaling = .scaleAxesIndependently
-        
+        configureScreenshotOverlayImageView(imageView, screenFrame: screenFrame)
+        imageView.image = displayImage
+
         overlayWindow.contentView = imageView
         NSAnimationContext.runAnimationGroup { context in
             context.duration = 0

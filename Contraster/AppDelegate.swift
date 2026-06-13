@@ -125,7 +125,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
         }
         
-        if ProcessInfo.processInfo.arguments.contains("G_DEBUG") {
+        if isGDebugScheme {
             runDebugStartupSequence()
         } else if(appModel.isFirstWelcomeDone()) {
             checkScreenRecordingPermissions()
