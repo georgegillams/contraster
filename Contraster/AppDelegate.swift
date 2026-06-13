@@ -22,7 +22,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var mouseTrapUI: MouseTrap? = nil
     var mouseMoveMonitor: Any?
     var mouseClickMonitor: Any?
+    var keyMonitor: Any?
     var appModel = AppModel()
+    var screenshotOverlayWindow: NSWindow? = nil
+    var capturedScreenshots: [CGDirectDisplayID: NSImage] = [:]
+    var screenshotScreenFrames: [CGDirectDisplayID: NSRect] = [:]
+    var screenshotCaptureGeneration = 0
     
     func showWelcomeTutorial() {
         tutorialUI = Tutorial(appModel: appModel)
@@ -45,25 +50,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func hasScreenRecordingPermissions() -> Bool {
-        // Use CGPreflightScreenCaptureAccess() to properly check screen recording permissions
-        // This API is available in macOS 11.0+ (Big Sur and later)
-        // Since deployment target is 12.3, we can safely use this API
-        // This correctly checks if we can capture window content, not just the desktop background
-        if #available(macOS 11.0, *) {
-            return CGPreflightScreenCaptureAccess()
-        } else {
-            // Fallback for older macOS versions (though deployment target is 12.3)
-            // Attempt a test capture - but note this is not fully reliable
-            let mainDisplayID = CGMainDisplayID()
-            let testImage = CGDisplayCreateImage(mainDisplayID, rect: CGRect(x: 0, y: 0, width: 1, height: 1))
-            return testImage != nil
-        }
+        // Checks if we can capture window content, not just the desktop background.
+        let granted = CGPreflightScreenCaptureAccess()
+        gDebugPrint("hasScreenRecordingPermissions: \(granted)")
+        return granted
     }
 
     func checkScreenRecordingPermissions() {
         let hasScreenRecordingPermissions = hasScreenRecordingPermissions()
 
         if(!hasScreenRecordingPermissions) {
+            gDebugPrint("checkScreenRecordingPermissions: permission not granted, showing dialog")
             triggerSystemPermissionDialog()
             //  Wait for permissions to change and re-check
             DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
@@ -73,18 +70,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             // Return so that we only check one permission at a time
             return
         }
+        gDebugPrint("checkScreenRecordingPermissions: permission granted")
     }
 
     func triggerSystemPermissionDialog() {
-        // Use CGRequestScreenCaptureAccess() to properly request screen recording permissions
-        // This will show the system permission dialog if not already granted
-        // Note: The dialog will only appear once per app session if denied
-        if #available(macOS 11.0, *) {
-            CGRequestScreenCaptureAccess()
-        } else {
-            // Fallback for older macOS versions: trigger dialog by attempting capture
-            CGDisplayCreateImage(NSScreen.main?.displayID ?? 0, rect: NSRect(x: 50, y: 50, width: 1, height: 1))
-        }
+        gDebugPrint("triggerSystemPermissionDialog")
+        // Shows the system permission dialog if not already granted.
+        // Note: The dialog will only appear once per app session if denied.
+        CGRequestScreenCaptureAccess()
     }
     
     func openScreenRecordingPreferences() {
@@ -104,14 +97,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         colourPickerWindow.level = .floating
         colourPickerWindow.alphaValue = 0
         
-        mouseTrapWindow.contentView?.wantsLayer = true
-        mouseTrapWindow.level = .floating
-        mouseTrapWindow.backgroundColor = NSColor.clear
-        mouseTrapWindow.contentView?.layer?.cornerRadius = 25
-        mouseTrapWindow.contentView?.layer?.masksToBounds = true
-        mouseTrapWindow.makeKeyAndOrderFront(mouseTrapWindow)
-        
         mouseTrapWindow.contentViewController = NSHostingController(rootView: mouseTrapUI)
+        configureMouseTrapWindow()
         
         
         // Create a popover
@@ -138,7 +125,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
         }
         
-        if(appModel.isFirstWelcomeDone()) {
+        if ProcessInfo.processInfo.arguments.contains("G_DEBUG") {
+            runDebugStartupSequence()
+        } else if(appModel.isFirstWelcomeDone()) {
             checkScreenRecordingPermissions()
         } else {
             showWelcomeTutorial()
@@ -151,6 +140,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
         return true
+    }
+
+    private func runDebugStartupSequence() {
+        let popoverDelay: TimeInterval = 0.5
+        let pickDelay: TimeInterval = 0.5
+
+        gDebugPrint("runDebugStartupSequence: waiting \(popoverDelay)s before opening popover")
+        DispatchQueue.main.asyncAfter(deadline: .now() + popoverDelay) {
+            self.checkScreenRecordingPermissions()
+            gDebugPrint("runDebugStartupSequence: opening popover")
+            self.showPopover()
+
+            gDebugPrint("runDebugStartupSequence: waiting \(pickDelay)s before starting pick")
+            DispatchQueue.main.asyncAfter(deadline: .now() + pickDelay) {
+                gDebugPrint("runDebugStartupSequence: starting pick")
+                self.appModel.createNewPick()
+                self.updateMouseTrapWindow()
+            }
+        }
     }
     
     

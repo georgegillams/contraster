@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Foundation
+import AppKit
 
 enum PickingMode {
     case notPicking
@@ -20,6 +21,9 @@ class AppModel: ObservableObject {
     @Published var currentResult: ResultsModel?
     @Published var resultsList = [ResultsModel]()
     @Published var pickingMode: PickingMode = .notPicking
+    @Published var currentMouseLocation: NSPoint = .zero
+    @Published var currentScreenshot: NSImage?
+    @Published var currentScreenFrame: NSRect = .zero
     
     init() {
 //        CoreDataHelper().dropAllData()
@@ -38,14 +42,17 @@ class AppModel: ObservableObject {
         else if (currentResult?.color1Captured == true && currentResult?.color2Captured == false) {
             pickingMode = .pickingSecondColor
         }
+        gDebugPrint("updatePickingMode: \(pickingMode)")
     }
     
     func createNewPick() {
+        gDebugPrint("createNewPick")
         currentResult = ResultsModel(color1: nil, color2: nil)
         updatePickingMode()
     }
     
     func cancelPick() {
+        gDebugPrint("cancelPick")
         currentResult = nil
         updatePickingMode()
     }

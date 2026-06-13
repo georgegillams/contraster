@@ -49,7 +49,7 @@ struct Main: View {
                                 }
                             }) {
                                 Image(systemName: "eyedropper.halffull").foregroundColor(Color.white)
-                                Text(appModel.pickingMode == .notPicking ? "New pick" : "Cancel").foregroundColor(Color.white)
+                                Text(appModel.pickingMode == .notPicking ? "New pick" : "Press ESC to cancel").foregroundColor(Color.white)
                             }.bgColor(appModel.pickingMode == .notPicking ? Color("CTABackgroundColor") : Color("DangerColor"))
                         }
                     }.frame( alignment: .center)
