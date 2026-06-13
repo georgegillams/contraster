@@ -13,8 +13,8 @@ class InterfaceConstants {
     static let popoverMaxHeight: CGFloat = 420
     static let popoverMinHeight: CGFloat = 260
     static let popoverHistoryMaxHeight: CGFloat = 240
-    static let popoverCardShadowRadius: CGFloat = 3
-    static let popoverCardShadowPadding: CGFloat = 3
+    static let popoverCardShadowSpread: CGFloat = 2
+    static let popoverCardShadowInset: CGFloat = 2
     static let popoverPickingExtraTopPadding: CGFloat = 18
     static let popoverPickingSectionBottomPadding: CGFloat = 16
     static let popoverTitleFont = Font.system(size: 17, weight: .semibold)

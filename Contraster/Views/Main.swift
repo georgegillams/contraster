@@ -92,6 +92,7 @@ struct Main: View {
 
                 ContrastResultsAnimated(model: appModel.currentResult)
             }
+            .padding(.horizontal, InterfaceConstants.popoverCardShadowInset)
             .padding(.bottom, isPicking ? InterfaceConstants.popoverPickingSectionBottomPadding : 0)
 
             Divider().padding(.vertical, 4)
@@ -120,10 +121,13 @@ struct Main: View {
                         ContrastResults(model: result, onDelete: {
                             appModel.deleteColourPair(pickId: result.pickId)
                         })
-                        .padding(.vertical, InterfaceConstants.popoverCardShadowPadding)
+                        .padding(.vertical, InterfaceConstants.popoverCardShadowSpread)
                     }
                 }
-                .frame(maxWidth: .infinity)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, InterfaceConstants.popoverCardShadowInset)
+                .padding(.top, InterfaceConstants.popoverCardShadowInset)
+                .padding(.bottom, InterfaceConstants.popoverCardShadowInset + InterfaceConstants.popoverCardShadowSpread)
             }
             .frame(maxHeight: InterfaceConstants.popoverHistoryMaxHeight)
         }

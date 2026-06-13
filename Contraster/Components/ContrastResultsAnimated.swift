@@ -23,11 +23,11 @@ struct ContrastResultsAnimated: View {
         Group {
             if let model {
                 ContrastResults(model: model, onDelete: nil)
-                    .padding(.vertical, InterfaceConstants.popoverCardShadowPadding)
                     .transition(.currentPickCard)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.vertical, model != nil ? InterfaceConstants.popoverCardShadowSpread : 0)
         .animation(.easeOut(duration: 0.28), value: model?.pickId)
     }
 }

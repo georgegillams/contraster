@@ -10,6 +10,8 @@ import SwiftUI
 struct CardView<Content> : View where Content : View {
     var content: () -> Content
 
+    private let cornerRadius: CGFloat = 8
+
     init(@ViewBuilder content: @escaping () -> Content) {
         self.content = content
     }
@@ -19,18 +21,19 @@ struct CardView<Content> : View where Content : View {
             content()
         }
         .padding(10)
-        .background(Color(nsColor: .controlBackgroundColor))
-        .cornerRadius(8)
+        .background(
+            RoundedRectangle(cornerRadius: cornerRadius)
+                .fill(Color(nsColor: .controlBackgroundColor))
+        )
         .overlay(
-            RoundedRectangle(cornerRadius: 8)
+            RoundedRectangle(cornerRadius: cornerRadius)
                 .strokeBorder(Color(nsColor: .separatorColor), lineWidth: 0.5)
         )
-        .shadow(
-            color: Color(nsColor: .shadowColor).opacity(0.22),
-            radius: InterfaceConstants.popoverCardShadowRadius,
-            x: 0,
-            y: 1
-        )
+        .background {
+            RoundedRectangle(cornerRadius: cornerRadius)
+                .fill(Color(nsColor: .shadowColor).opacity(0.05))
+                .padding(-InterfaceConstants.popoverCardShadowSpread)
+        }
     }
 }
 
