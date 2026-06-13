@@ -49,19 +49,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func hasScreenRecordingPermissions() -> Bool {
-        // Use CGPreflightScreenCaptureAccess() to properly check screen recording permissions
-        // This API is available in macOS 11.0+ (Big Sur and later)
-        // Since deployment target is 12.3, we can safely use this API
-        // This correctly checks if we can capture window content, not just the desktop background
-        if #available(macOS 11.0, *) {
-            return CGPreflightScreenCaptureAccess()
-        } else {
-            // Fallback for older macOS versions (though deployment target is 12.3)
-            // Attempt a test capture - but note this is not fully reliable
-            let mainDisplayID = CGMainDisplayID()
-            let testImage = CGDisplayCreateImage(mainDisplayID, rect: CGRect(x: 0, y: 0, width: 1, height: 1))
-            return testImage != nil
-        }
+        // Checks if we can capture window content, not just the desktop background.
+        return CGPreflightScreenCaptureAccess()
     }
 
     func checkScreenRecordingPermissions() {
@@ -80,15 +69,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func triggerSystemPermissionDialog() {
-        // Use CGRequestScreenCaptureAccess() to properly request screen recording permissions
-        // This will show the system permission dialog if not already granted
-        // Note: The dialog will only appear once per app session if denied
-        if #available(macOS 11.0, *) {
-            CGRequestScreenCaptureAccess()
-        } else {
-            // Fallback for older macOS versions: trigger dialog by attempting capture
-            CGDisplayCreateImage(NSScreen.main?.displayID ?? 0, rect: NSRect(x: 50, y: 50, width: 1, height: 1))
-        }
+        // Shows the system permission dialog if not already granted.
+        // Note: The dialog will only appear once per app session if denied.
+        CGRequestScreenCaptureAccess()
     }
     
     func openScreenRecordingPreferences() {
@@ -142,7 +125,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
         }
         
-        if(appModel.isFirstWelcomeDone()) {
+        if ProcessInfo.processInfo.arguments.contains("G_DEBUG") {
+            DispatchQueue.main.async {
+                self.checkScreenRecordingPermissions()
+                self.showPopover()
+                self.appModel.createNewPick()
+                self.updateMouseTrapWindow()
+            }
+        } else if(appModel.isFirstWelcomeDone()) {
             checkScreenRecordingPermissions()
         } else {
             showWelcomeTutorial()

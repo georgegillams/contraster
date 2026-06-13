@@ -8,6 +8,7 @@
 import Cocoa
 import SwiftUI
 import CoreImage
+import ScreenCaptureKit
 
 extension AppDelegate {
 
@@ -81,24 +82,62 @@ extension AppDelegate {
     }
     
     func captureScreenshot() {
-        // Capture screenshots for all screens
+        Task { @MainActor in
+            await captureScreenshotAndShowOverlay()
+        }
+    }
+
+    @MainActor
+    private func captureScreenshotAndShowOverlay() async {
+        guard hasScreenRecordingPermissions() else {
+            triggerSystemPermissionDialog()
+            return
+        }
+
+        if #available(macOS 14.0, *) {
+            await captureScreenshotsWithScreenCaptureKit()
+            showScreenshotOverlay()
+        }
+    }
+
+    @available(macOS 14.0, *)
+    private func captureScreenshotsWithScreenCaptureKit() async {
         capturedScreenshots = [:]
         screenshotScreenFrames = [:]
-        
+
         for screen in NSScreen.screens {
-            let displayID = screen.displayID
             let screenFrame = screen.frame
-            
-            // Capture the entire screen
-            if let imageRef = CGDisplayCreateImage(displayID) {
+
+            do {
+                let imageRef = try await captureDisplayImage(for: screen, frame: screenFrame)
                 let screenshot = NSImage(cgImage: imageRef, size: screenFrame.size)
                 capturedScreenshots[screen] = screenshot
                 screenshotScreenFrames[screen] = screenFrame
+            } catch {
+                if let imageRef = CGDisplayCreateImage(screen.displayID) {
+                    let screenshot = NSImage(cgImage: imageRef, size: screenFrame.size)
+                    capturedScreenshots[screen] = screenshot
+                    screenshotScreenFrames[screen] = screenFrame
+                }
             }
         }
-        
-        // Show overlay window with screenshot
-        showScreenshotOverlay()
+    }
+
+    @available(macOS 14.0, *)
+    private func captureDisplayImage(for screen: NSScreen, frame: NSRect) async throws -> CGImage {
+        let content = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: true)
+        guard let display = content.displays.first(where: { $0.displayID == screen.displayID }) else {
+            throw NSError(domain: "Contraster", code: 1, userInfo: [NSLocalizedDescriptionKey: "Display not found"])
+        }
+
+        let filter = SCContentFilter(display: display, excludingWindows: [])
+        let config = SCStreamConfiguration()
+        let scale = screen.backingScaleFactor
+        config.width = Int(frame.width * scale)
+        config.height = Int(frame.height * scale)
+        config.showsCursor = false
+
+        return try await SCScreenshotManager.captureImage(contentFilter: filter, configuration: config)
     }
     
     func showScreenshotOverlay() {
@@ -234,9 +273,14 @@ extension AppDelegate {
             removeMouseAndKeyboardObservers()
         }
 
-        // Capture screenshot when picking starts
-        captureScreenshot()
+        Task { @MainActor in
+            await self.captureScreenshotAndShowOverlay()
+            guard !self.capturedScreenshots.isEmpty else { return }
+            self.installMouseAndKeyboardMonitors()
+        }
+    }
 
+    private func installMouseAndKeyboardMonitors() {
         mouseMoveMonitor = NSEvent.addLocalMonitorForEvents(matching: [.mouseMoved]) {
             // This shouldn't actually happen, as the monitor should be inactive when not picking.
             if (self.appModel.pickingMode == .notPicking) {
@@ -331,34 +375,37 @@ extension AppDelegate {
         }
     }
 
+    func showPopover() {
+        guard let sbutton = statusBarItem.button,
+              let contentView = colourPickerWindow.contentView else { return }
+
+        let buttonRect: NSRect = sbutton.convert(sbutton.bounds, to: nil)
+        let screenRect: NSRect = sbutton.window!.convertToScreen(buttonRect)
+
+        let posX = screenRect.origin.x + (screenRect.width / 2) - 10
+        let posY = screenRect.origin.y
+
+        colourPickerWindow.setFrame(NSRect(x: posX, y: posY, width: 20, height: 5), display: true, animate: false)
+        updateMouseTrapWindow()
+
+        guard !popover.isShown else { return }
+
+        colourPickerWindow.makeKeyAndOrderFront(self)
+        NSApplication.shared.presentationOptions = []
+        NSApp.activate(ignoringOtherApps: true)
+        popover.show(relativeTo: contentView.frame, of: contentView, preferredEdge: NSRectEdge.minY)
+    }
+
     @objc func togglePopover(_ sender: AnyObject?) {
         let event = NSApp.currentEvent!
 
         if event.type == NSEvent.EventType.leftMouseUp {
-
-            if let sbutton = statusBarItem.button {
-
-                // find the coordinates of the statusBarItem in screen space
-                let buttonRect: NSRect = sbutton.convert(sbutton.bounds, to: nil)
-                let screenRect: NSRect = sbutton.window!.convertToScreen(buttonRect)
-
-                // calculate the bottom center position (10 is the half of the window width)
-                let posX = screenRect.origin.x + (screenRect.width / 2) - 10
-                let posY = screenRect.origin.y
-
-                colourPickerWindow.setFrame(NSRect(x: posX, y: posY, width: 20, height: 5), display: true,animate: false)
+            if popover.isShown {
+                popover.performClose(sender)
+                self.appModel.cancelPick()
                 updateMouseTrapWindow()
-
-                if popover.isShown {
-                    popover.performClose(sender)
-                    self.appModel.cancelPick()
-                    updateMouseTrapWindow()
-                } else {
-                    colourPickerWindow.makeKeyAndOrderFront(self)
-                    NSApplication.shared.presentationOptions = []
-                    NSApp.activate(ignoringOtherApps: true)
-                    popover.show(relativeTo: colourPickerWindow.contentView!.frame, of: colourPickerWindow.contentView!, preferredEdge: NSRectEdge.minY)
-                }
+            } else {
+                showPopover()
             }
         } else if event.type == NSEvent.EventType.rightMouseUp {
             openMenu()
