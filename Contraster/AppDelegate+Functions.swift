@@ -129,16 +129,22 @@ extension AppDelegate {
         gDebugPrint("removeMouseAndKeyboardObservers")
         let moveMonitor = mouseMoveMonitor
         let clickMonitor = mouseClickMonitor
+        let scrollWheelMonitor = scrollMonitor
         let escMonitor = keyMonitor
         mouseMoveMonitor = nil
         mouseClickMonitor = nil
+        scrollMonitor = nil
         keyMonitor = nil
+        scrollWheelAccumulator = 0
 
         if let moveMonitor {
             NSEvent.removeMonitor(moveMonitor)
         }
         if let clickMonitor {
             NSEvent.removeMonitor(clickMonitor)
+        }
+        if let scrollWheelMonitor {
+            NSEvent.removeMonitor(scrollWheelMonitor)
         }
         if let escMonitor {
             NSEvent.removeMonitor(escMonitor)
@@ -428,11 +434,11 @@ extension AppDelegate {
     }
 
     func addMouseAndKeyboardObservers() {
-        if(mouseMoveMonitor != nil && mouseClickMonitor != nil && keyMonitor != nil) {
+        if(mouseMoveMonitor != nil && mouseClickMonitor != nil && scrollMonitor != nil && keyMonitor != nil) {
             gDebugPrint("addMouseAndKeyboardObservers: monitors already installed")
             // all monitors already exist, so nothing to do
             return
-        } else if (mouseMoveMonitor == nil || mouseClickMonitor == nil || keyMonitor == nil) {
+        } else if (mouseMoveMonitor == nil || mouseClickMonitor == nil || scrollMonitor == nil || keyMonitor == nil) {
             // one of the monitors is nil, so we'll reset them all
             removeMouseAndKeyboardObservers()
         }
@@ -440,6 +446,25 @@ extension AppDelegate {
         captureScreenshot()
         installMouseAndKeyboardMonitors()
         gDebugPrint("addMouseAndKeyboardObservers: monitors installed for mode=\(debugPickingModeLabel(appModel.pickingMode))")
+    }
+
+    private func handleMagnificationScroll(_ event: NSEvent) {
+        let delta = event.scrollingDeltaY
+        guard delta != 0 else { return }
+
+        scrollWheelAccumulator += delta
+        let scrollThreshold = event.hasPreciseScrollingDeltas
+            ? InterfaceConstants.magnificationScrollThresholdPrecise
+            : InterfaceConstants.magnificationScrollThresholdDiscrete
+
+        while scrollWheelAccumulator >= scrollThreshold {
+            appModel.adjustMagnificationScale(by: 1)
+            scrollWheelAccumulator -= scrollThreshold
+        }
+        while scrollWheelAccumulator <= -scrollThreshold {
+            appModel.adjustMagnificationScale(by: -1)
+            scrollWheelAccumulator += scrollThreshold
+        }
     }
 
     private func installMouseAndKeyboardMonitors() {
@@ -495,6 +520,14 @@ extension AppDelegate {
             return $0
         }
 
+        scrollMonitor = NSEvent.addLocalMonitorForEvents(matching: [.scrollWheel]) { event in
+            if self.appModel.pickingMode == .notPicking {
+                return event
+            }
+
+            self.handleMagnificationScroll(event)
+            return nil
+        }
 
         mouseClickMonitor = NSEvent.addLocalMonitorForEvents(matching: [.leftMouseDown, .leftMouseUp]) { event in
             // This shouldn't actually happen, as the monitor should be inactive when not picking.

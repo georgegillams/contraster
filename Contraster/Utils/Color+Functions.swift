@@ -6,21 +6,46 @@
 //
 
 import SwiftUI
+#if os(macOS)
+import AppKit
+#endif
 
 extension Color {
-    var hexString: String {
-        let colorRef = cgColor?.components
-        let r = colorRef?[0] ?? 0
-        let g = colorRef?[1] ?? 0
-        let b = ((colorRef?.count ?? 0) > 2 ? colorRef?[2] : g) ?? 0
+    var sRGBAComponents: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat)? {
+        if let cgColor,
+           let rgbColor = cgColor.converted(
+               to: CGColorSpaceCreateDeviceRGB(),
+               intent: .defaultIntent,
+               options: nil
+           ),
+           let components = rgbColor.components,
+           components.count >= 3 {
+            let alpha = components.count > 3 ? components[3] : 1
+            return (components[0], components[1], components[2], alpha)
+        }
 
-        let color = String(
+        #if os(macOS)
+        guard let nsColor = NSColor(self).usingColorSpace(.sRGB) else { return nil }
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+        nsColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        return (red, green, blue, alpha)
+        #else
+        return nil
+        #endif
+    }
+
+    var hexString: String {
+        guard let components = sRGBAComponents else { return "#000000" }
+
+        return String(
             format: "#%02lX%02lX%02lX",
-            lroundf(Float(r * 255)),
-            lroundf(Float(g * 255)),
-            lroundf(Float(b * 255))
+            lroundf(Float(components.red * 255)),
+            lroundf(Float(components.green * 255)),
+            lroundf(Float(components.blue * 255))
         )
-        return color
     }
     
     public init?(hex: String) {
@@ -58,12 +83,12 @@ extension Color {
     }
 
     func adjust(by percentage: CGFloat = 30.0) -> Color? {
-        var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
+        guard let components = sRGBAComponents else { return nil }
 
-        NSColor(self).getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-        return Color(red: min(red + percentage/100, 1.0),
-                     green: min(green + percentage/100, 1.0),
-                     blue: min(blue + percentage/100, 1.0))
-
+        return Color(
+            red: max(0, min(components.red + percentage / 100, 1.0)),
+            green: max(0, min(components.green + percentage / 100, 1.0)),
+            blue: max(0, min(components.blue + percentage / 100, 1.0))
+        )
     }
 }

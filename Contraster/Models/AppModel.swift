@@ -24,6 +24,7 @@ class AppModel: ObservableObject {
     @Published var currentMouseLocation: NSPoint = .zero
     @Published var currentScreenshot: NSImage?
     @Published var currentScreenFrame: NSRect = .zero
+    @Published var magnificationScale: CGFloat = InterfaceConstants.defaultMagnificationScale
     
     init() {
 //        CoreDataHelper().dropAllData()
@@ -47,8 +48,24 @@ class AppModel: ObservableObject {
     
     func createNewPick() {
         gDebugPrint("createNewPick")
+        resetMagnificationScale()
         currentResult = ResultsModel(color1: nil, color2: nil)
         updatePickingMode()
+    }
+
+    func resetMagnificationScale() {
+        magnificationScale = InterfaceConstants.defaultMagnificationScale
+    }
+
+    func adjustMagnificationScale(by delta: Int) {
+        let newScale = Int(round(magnificationScale)) + delta
+        let clampedScale = min(
+            Int(InterfaceConstants.maxMagnificationScale),
+            max(Int(InterfaceConstants.minMagnificationScale), newScale)
+        )
+        guard clampedScale != Int(round(magnificationScale)) else { return }
+        magnificationScale = CGFloat(clampedScale)
+        gDebugPrint("adjustMagnificationScale: \(magnificationScale)")
     }
     
     func cancelPick() {

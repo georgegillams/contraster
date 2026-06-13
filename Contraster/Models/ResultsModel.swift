@@ -71,11 +71,11 @@ class ResultsModel: ObservableObject, Identifiable {
     
     func calculateLuminance(color: Color) -> CGFloat {
         // L = 0.2126 * R + 0.7152 * G + 0.0722 * B
-        let components = color.cgColor?.components
-        let componentR = calculateComponent(sRGB: components?[0] ?? 0)
-        let componentG = calculateComponent(sRGB: components?[1] ?? 0)
-        let componentB = calculateComponent(sRGB: components?[2] ?? 0)
-        
+        guard let components = color.sRGBAComponents else { return 0 }
+        let componentR = calculateComponent(sRGB: components.red)
+        let componentG = calculateComponent(sRGB: components.green)
+        let componentB = calculateComponent(sRGB: components.blue)
+
         return 0.2126 * componentR + 0.7152 * componentG + 0.0722 * componentB
     }
 
@@ -124,13 +124,13 @@ class ResultsModel: ObservableObject, Identifiable {
     }
 
     func recalculateForegroundColors() {
-        if(color1 != nil){
-            color1Foreground = calculateAccessibleForegroundColour(forBackground: color1!, closestTo:color2 ?? Color.gray)
+        if color1 != nil {
+            color1Foreground = calculateAccessibleForegroundColour(forBackground: color1!, closestTo: color2 ?? Color(white: 0.5))
         } else {
-            color2Foreground = Color.black
+            color1Foreground = Color.black
         }
-        if(color2 != nil){
-            color2Foreground = calculateAccessibleForegroundColour(forBackground: color2!, closestTo:color1 ?? Color.gray)
+        if color2 != nil {
+            color2Foreground = calculateAccessibleForegroundColour(forBackground: color2!, closestTo: color1 ?? Color(white: 0.5))
         } else {
             color2Foreground = Color.black
         }
@@ -141,18 +141,28 @@ class ResultsModel: ObservableObject, Identifiable {
         var darkerAcceptableColor = closestTo
         var contrastLighter = calculateContrastRatio(color1: forBackground, color2: lighterAcceptableColor)
         var contrastDarker = calculateContrastRatio(color1: forBackground, color2: darkerAcceptableColor)
-        while(contrastLighter < 6 && contrastDarker < 6) {
-            lighterAcceptableColor = lighterAcceptableColor.lighter(by:10)!
-            darkerAcceptableColor = darkerAcceptableColor.darker(by:10)!
+
+        var iterations = 0
+        while contrastLighter < 6 && contrastDarker < 6 && iterations < 20 {
+            let previousContrastLighter = contrastLighter
+            let previousContrastDarker = contrastDarker
+
+            lighterAcceptableColor = lighterAcceptableColor.lighter(by: 10) ?? lighterAcceptableColor
+            darkerAcceptableColor = darkerAcceptableColor.darker(by: 10) ?? darkerAcceptableColor
             contrastLighter = calculateContrastRatio(color1: forBackground, color2: lighterAcceptableColor)
             contrastDarker = calculateContrastRatio(color1: forBackground, color2: darkerAcceptableColor)
+
+            if contrastLighter == previousContrastLighter && contrastDarker == previousContrastDarker {
+                break
+            }
+
+            iterations += 1
         }
 
-        if(contrastLighter>=6){
+        if contrastLighter >= 6 {
             return lighterAcceptableColor
         }
         return darkerAcceptableColor
-
     }
 
 }
