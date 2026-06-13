@@ -25,8 +25,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var keyMonitor: Any?
     var appModel = AppModel()
     var screenshotOverlayWindow: NSWindow? = nil
-    var capturedScreenshots: [NSScreen: NSImage] = [:]
-    var screenshotScreenFrames: [NSScreen: NSRect] = [:]
+    var capturedScreenshots: [CGDirectDisplayID: NSImage] = [:]
+    var screenshotScreenFrames: [CGDirectDisplayID: NSRect] = [:]
+    var screenshotCaptureGeneration = 0
     
     func showWelcomeTutorial() {
         tutorialUI = Tutorial(appModel: appModel)
@@ -50,13 +51,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func hasScreenRecordingPermissions() -> Bool {
         // Checks if we can capture window content, not just the desktop background.
-        return CGPreflightScreenCaptureAccess()
+        let granted = CGPreflightScreenCaptureAccess()
+        gDebugPrint("hasScreenRecordingPermissions: \(granted)")
+        return granted
     }
 
     func checkScreenRecordingPermissions() {
         let hasScreenRecordingPermissions = hasScreenRecordingPermissions()
 
         if(!hasScreenRecordingPermissions) {
+            gDebugPrint("checkScreenRecordingPermissions: permission not granted, showing dialog")
             triggerSystemPermissionDialog()
             //  Wait for permissions to change and re-check
             DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
@@ -66,9 +70,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             // Return so that we only check one permission at a time
             return
         }
+        gDebugPrint("checkScreenRecordingPermissions: permission granted")
     }
 
     func triggerSystemPermissionDialog() {
+        gDebugPrint("triggerSystemPermissionDialog")
         // Shows the system permission dialog if not already granted.
         // Note: The dialog will only appear once per app session if denied.
         CGRequestScreenCaptureAccess()
@@ -91,14 +97,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         colourPickerWindow.level = .floating
         colourPickerWindow.alphaValue = 0
         
-        mouseTrapWindow.contentView?.wantsLayer = true
-        mouseTrapWindow.level = .screenSaver // Highest level to stay on top of everything
-        mouseTrapWindow.backgroundColor = NSColor.clear
-        mouseTrapWindow.contentView?.layer?.cornerRadius = 8
-        mouseTrapWindow.contentView?.layer?.masksToBounds = true
-        mouseTrapWindow.makeKeyAndOrderFront(mouseTrapWindow)
-        
         mouseTrapWindow.contentViewController = NSHostingController(rootView: mouseTrapUI)
+        configureMouseTrapWindow()
         
         
         // Create a popover
@@ -126,12 +126,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         
         if ProcessInfo.processInfo.arguments.contains("G_DEBUG") {
-            DispatchQueue.main.async {
-                self.checkScreenRecordingPermissions()
-                self.showPopover()
-                self.appModel.createNewPick()
-                self.updateMouseTrapWindow()
-            }
+            runDebugStartupSequence()
         } else if(appModel.isFirstWelcomeDone()) {
             checkScreenRecordingPermissions()
         } else {
@@ -145,6 +140,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
         return true
+    }
+
+    private func runDebugStartupSequence() {
+        let popoverDelay: TimeInterval = 0.5
+        let pickDelay: TimeInterval = 0.5
+
+        gDebugPrint("runDebugStartupSequence: waiting \(popoverDelay)s before opening popover")
+        DispatchQueue.main.asyncAfter(deadline: .now() + popoverDelay) {
+            self.checkScreenRecordingPermissions()
+            gDebugPrint("runDebugStartupSequence: opening popover")
+            self.showPopover()
+
+            gDebugPrint("runDebugStartupSequence: waiting \(pickDelay)s before starting pick")
+            DispatchQueue.main.asyncAfter(deadline: .now() + pickDelay) {
+                gDebugPrint("runDebugStartupSequence: starting pick")
+                self.appModel.createNewPick()
+                self.updateMouseTrapWindow()
+            }
+        }
     }
     
     

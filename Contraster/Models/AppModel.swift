@@ -42,14 +42,17 @@ class AppModel: ObservableObject {
         else if (currentResult?.color1Captured == true && currentResult?.color2Captured == false) {
             pickingMode = .pickingSecondColor
         }
+        gDebugPrint("updatePickingMode: \(pickingMode)")
     }
     
     func createNewPick() {
+        gDebugPrint("createNewPick")
         currentResult = ResultsModel(color1: nil, color2: nil)
         updatePickingMode()
     }
     
     func cancelPick() {
+        gDebugPrint("cancelPick")
         currentResult = nil
         updatePickingMode()
     }

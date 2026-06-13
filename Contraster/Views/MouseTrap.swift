@@ -72,7 +72,7 @@ struct MagnificationView: View {
         GeometryReader { geometry in
             if let cgImage = screenshot.cgImage(forProposedRect: nil, context: nil, hints: nil) {
                 // Calculate the region to magnify
-                let sourceRegion = calculateSourceRegion()
+                let sourceRegion = calculateSourceRegion(cgImage: cgImage)
                 
                 // Create a cropped and scaled image
                 if let croppedImage = cropAndScaleImage(
@@ -99,29 +99,25 @@ struct MagnificationView: View {
         }
     }
     
-    private func calculateSourceRegion() -> CGRect {
-        let imageSize = screenshot.size
+    private func calculateSourceRegion(cgImage: CGImage) -> CGRect {
+        let pixelWidth = CGFloat(cgImage.width)
+        let pixelHeight = CGFloat(cgImage.height)
         let screenHeight = screenFrame.height
-        
-        // Calculate point relative to screen
+        let pixelScale = pixelWidth / screenFrame.width
+
         let relativeX = mouseLocation.x - screenFrame.origin.x
         let relativeY = mouseLocation.y - screenFrame.origin.y
-        
-        // Invert Y coordinate for image (screen Y is bottom-up, image Y is top-down)
         let imageY = screenHeight - relativeY
-        
-        // Convert to image coordinates
-        let imagePointX = (relativeX / screenFrame.width) * imageSize.width
-        let imagePointY = (imageY / screenFrame.height) * imageSize.height
-        
-        // Calculate source region size (what area of the image to show)
-        let sourceWidth = magnificationWidth / magnificationScale
-        let sourceHeight = magnificationHeight / magnificationScale
-        
-        // Center the region on the mouse location
-        let sourceX = max(0, min(imageSize.width - sourceWidth, imagePointX - sourceWidth / 2))
-        let sourceY = max(0, min(imageSize.height - sourceHeight, imagePointY - sourceHeight / 2))
-        
+
+        let imagePointX = (relativeX / screenFrame.width) * pixelWidth
+        let imagePointY = (imageY / screenFrame.height) * pixelHeight
+
+        let sourceWidth = (magnificationWidth / magnificationScale) * pixelScale
+        let sourceHeight = (magnificationHeight / magnificationScale) * pixelScale
+
+        let sourceX = max(0, min(pixelWidth - sourceWidth, imagePointX - sourceWidth / 2))
+        let sourceY = max(0, min(pixelHeight - sourceHeight, imagePointY - sourceHeight / 2))
+
         return CGRect(x: sourceX, y: sourceY, width: sourceWidth, height: sourceHeight)
     }
     

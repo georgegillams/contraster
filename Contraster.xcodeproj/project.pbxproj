@@ -28,6 +28,7 @@
 		0866CAFE28C26A950092633D /* Color+Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0866CAFD28C26A950092633D /* Color+Functions.swift */; };
 		086C010628D511A600C59051 /* NSScreen+Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086C010528D511A600C59051 /* NSScreen+Functions.swift */; };
 		086C010828D511CB00C59051 /* ScreenHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086C010728D511CB00C59051 /* ScreenHelper.swift */; };
+		08DBG00228F0000100A1B2C /* Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DBG00128F0000100A1B2C /* Debug.swift */; };
 		088AC0EB28C8E35300153A74 /* ResultsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088AC0EA28C8E35300153A74 /* ResultsModel.swift */; };
 		088AC0ED28C8E3F100153A74 /* Compliance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088AC0EC28C8E3F100153A74 /* Compliance.swift */; };
 		088AC0F228C905F200153A74 /* ColourPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088AC0F128C905F200153A74 /* ColourPicker.swift */; };
@@ -88,6 +89,7 @@
 		0866CAFD28C26A950092633D /* Color+Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Functions.swift"; sourceTree = "<group>"; };
 		086C010528D511A600C59051 /* NSScreen+Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSScreen+Functions.swift"; sourceTree = "<group>"; };
 		086C010728D511CB00C59051 /* ScreenHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenHelper.swift; sourceTree = "<group>"; };
+		08DBG00128F0000100A1B2C /* Debug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debug.swift; sourceTree = "<group>"; };
 		088AC0EA28C8E35300153A74 /* ResultsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsModel.swift; sourceTree = "<group>"; };
 		088AC0EC28C8E3F100153A74 /* Compliance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Compliance.swift; sourceTree = "<group>"; };
 		088AC0F128C905F200153A74 /* ColourPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColourPicker.swift; sourceTree = "<group>"; };
@@ -239,6 +241,7 @@
 			isa = PBXGroup;
 			children = (
 				0866CAFD28C26A950092633D /* Color+Functions.swift */,
+				08DBG00128F0000100A1B2C /* Debug.swift */,
 				086C010528D511A600C59051 /* NSScreen+Functions.swift */,
 				086C010728D511CB00C59051 /* ScreenHelper.swift */,
 			);
@@ -398,6 +401,7 @@
 				0866CAEC28C2613A0092633D /* Main.swift in Sources */,
 				088AC0F228C905F200153A74 /* ColourPicker.swift in Sources */,
 				0866CAFE28C26A950092633D /* Color+Functions.swift in Sources */,
+				08DBG00228F0000100A1B2C /* Debug.swift in Sources */,
 				08FFE00228DC701500B3B2C4 /* ContrastResultsAnimated.swift in Sources */,
 				0866CAFB28C265CF0092633D /* ColourPreview.swift in Sources */,
 				08EADAA828E22E98001289BD /* GButton.swift in Sources */,
