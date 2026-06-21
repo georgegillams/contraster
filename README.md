@@ -33,7 +33,7 @@ Previous picks are kept in the **History** section. Hover a history row and clic
 ### Menu bar controls
 
 - **Left-click** the menu bar icon — open or close the popover.
-- **Option + Left-click** the menu bar icon — open the popover and start capturing immediately.
+- **Hold option (⌥) and Left-click** the menu bar icon — open the popover and start capturing immediately.
 - **Right-click** the menu bar icon (or click the gear icon inside the popover) — open the menu:
   - About Contraster
   - Show tutorial
@@ -106,8 +106,17 @@ Then rebuild, run, and grant permission again through the tutorial or System Set
 
 ### What Contraster accesses
 
-The app is sandboxed and declares the `com.apple.security.screen-recording` entitlement. Screen capture is used only to read the colour at the cursor position during a pick. See `Contraster/Trunk/Info.plist` for the usage description shown to users.
+The app is sandboxed. Screen capture is governed by macOS privacy (TCC): users grant **Screen Recording** in System Settings. Contraster uses that only to read the colour at the cursor position during a pick. See `Contraster/Trunk/Info.plist` for the usage description shown to users.
 
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+## Release
+
+- Update version (marketing version) and build (needs incrementing). In XCode, click Contraster -> General -> Identity -> Version/Build
+- Take screenshots at 1280x800
+- Clean
+- Create build online at https://appstoreconnect.apple.com/
+- Archive
+- Upload

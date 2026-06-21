@@ -24,13 +24,14 @@
 		0866CAFE28C26A950092633D /* Color+Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0866CAFD28C26A950092633D /* Color+Functions.swift */; };
 		086C010628D511A600C59051 /* NSScreen+Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086C010528D511A600C59051 /* NSScreen+Functions.swift */; };
 		086C010828D511CB00C59051 /* ScreenHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086C010728D511CB00C59051 /* ScreenHelper.swift */; };
-		08DBG00228F0000100A1B2C /* Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DBG00128F0000100A1B2C /* Debug.swift */; };
 		088AC0EB28C8E35300153A74 /* ResultsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088AC0EA28C8E35300153A74 /* ResultsModel.swift */; };
 		088AC0ED28C8E3F100153A74 /* Compliance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088AC0EC28C8E3F100153A74 /* Compliance.swift */; };
 		089B04BF28DB507F00213E38 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089B04BE28DB507F00213E38 /* AppModel.swift */; };
 		08B0CC9028E30793004A319C /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B0CC8F28E30793004A319C /* CoreDataHelper.swift */; };
 		08B0CC9228E307BB004A319C /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B0CC9128E307BB004A319C /* CoreDataStack.swift */; };
+		08BLD01E28F0000100A1B2C /* AppMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08REF01E28F0000100A1B2C /* AppMain.swift */; };
 		08D2E2BC28DCC69E0088428F /* InterfaceConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D2E2BB28DCC69E0088428F /* InterfaceConstants.swift */; };
+		08DBG00228F0000100A1B2C /* Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DBG00128F0000100A1B2C /* Debug.swift */; };
 		08DF062828C2298300F1B733 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DF062728C2298300F1B733 /* AppDelegate.swift */; };
 		08E6E68528E560C90093D89B /* Settings+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E6E68328E560C90093D89B /* Settings+CoreDataClass.swift */; };
 		08E6E68628E560C90093D89B /* Settings+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E6E68428E560C90093D89B /* Settings+CoreDataProperties.swift */; };
@@ -38,9 +39,7 @@
 		08EAF87E28E5A4DD00945397 /* Tutorial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EAF87D28E5A4DD00945397 /* Tutorial.swift */; };
 		08F6419E28C3AD10008EB225 /* ContrastResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F6419D28C3AD10008EB225 /* ContrastResults.swift */; };
 		08FFE00228DC701500B3B2C4 /* ContrastResultsAnimated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08FFE00128DC701500B3B2C4 /* ContrastResultsAnimated.swift */; };
-
 		08REF00128F0000100A1B2C /* ContrasterAppActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08REF01128F0000100A1B2C /* ContrasterAppActions.swift */; };
-		08BLD01E28F0000100A1B2C /* AppMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08REF01E28F0000100A1B2C /* AppMain.swift */; };
 		08REF00228F0000100A1B2C /* ScreenCoordinateMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08REF01228F0000100A1B2C /* ScreenCoordinateMapper.swift */; };
 		08REF00328F0000100A1B2C /* Bundle+Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08REF01328F0000100A1B2C /* Bundle+Version.swift */; };
 		08REF00428F0000100A1B2C /* AppURLs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08REF01428F0000100A1B2C /* AppURLs.swift */; };
@@ -94,13 +93,13 @@
 		0866CAFD28C26A950092633D /* Color+Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Functions.swift"; sourceTree = "<group>"; };
 		086C010528D511A600C59051 /* NSScreen+Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSScreen+Functions.swift"; sourceTree = "<group>"; };
 		086C010728D511CB00C59051 /* ScreenHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenHelper.swift; sourceTree = "<group>"; };
-		08DBG00128F0000100A1B2C /* Debug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debug.swift; sourceTree = "<group>"; };
 		088AC0EA28C8E35300153A74 /* ResultsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsModel.swift; sourceTree = "<group>"; };
 		088AC0EC28C8E3F100153A74 /* Compliance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Compliance.swift; sourceTree = "<group>"; };
 		089B04BE28DB507F00213E38 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		08B0CC8F28E30793004A319C /* CoreDataHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
 		08B0CC9128E307BB004A319C /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		08D2E2BB28DCC69E0088428F /* InterfaceConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceConstants.swift; sourceTree = "<group>"; };
+		08DBG00128F0000100A1B2C /* Debug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debug.swift; sourceTree = "<group>"; };
 		08DF062728C2298300F1B733 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		08E6E68328E560C90093D89B /* Settings+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Settings+CoreDataClass.swift"; path = "Contraster/Settings+CoreDataClass.swift"; sourceTree = "<group>"; };
 		08E6E68428E560C90093D89B /* Settings+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Settings+CoreDataProperties.swift"; path = "Contraster/Settings+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -108,9 +107,7 @@
 		08EAF87D28E5A4DD00945397 /* Tutorial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tutorial.swift; sourceTree = "<group>"; };
 		08F6419D28C3AD10008EB225 /* ContrastResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContrastResults.swift; sourceTree = "<group>"; };
 		08FFE00128DC701500B3B2C4 /* ContrastResultsAnimated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContrastResultsAnimated.swift; sourceTree = "<group>"; };
-
 		08REF01128F0000100A1B2C /* ContrasterAppActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContrasterAppActions.swift; sourceTree = "<group>"; };
-		08REF01E28F0000100A1B2C /* AppMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMain.swift; sourceTree = "<group>"; };
 		08REF01228F0000100A1B2C /* ScreenCoordinateMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenCoordinateMapper.swift; sourceTree = "<group>"; };
 		08REF01328F0000100A1B2C /* Bundle+Version.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Version.swift"; sourceTree = "<group>"; };
 		08REF01428F0000100A1B2C /* AppURLs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppURLs.swift; sourceTree = "<group>"; };
@@ -123,6 +120,7 @@
 		08REF01B28F0000100A1B2C /* ColorPickingCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickingCoordinator.swift; sourceTree = "<group>"; };
 		08REF01C28F0000100A1B2C /* PopoverController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverController.swift; sourceTree = "<group>"; };
 		08REF01D28F0000100A1B2C /* ContrastCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContrastCalculatorTests.swift; sourceTree = "<group>"; };
+		08REF01E28F0000100A1B2C /* AppMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMain.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -280,7 +278,14 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-
+		08D2E2BA28DCC6570088428F /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				08D2E2BB28DCC69E0088428F /* InterfaceConstants.swift */,
+			);
+			path = Constants;
+			sourceTree = "<group>";
+		};
 		08GRP00128F0000100A1B2C /* App */ = {
 			isa = PBXGroup;
 			children = (
@@ -308,14 +313,6 @@
 				08REF01728F0000100A1B2C /* ColorPairStore.swift */,
 			);
 			path = Persistence;
-			sourceTree = "<group>";
-		};
-		08D2E2BA28DCC6570088428F /* Constants */ = {
-			isa = PBXGroup;
-			children = (
-				08D2E2BB28DCC69E0088428F /* InterfaceConstants.swift */,
-			);
-			path = Constants;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -645,7 +642,7 @@
 				CODE_SIGN_ENTITLEMENTS = Contraster/Trunk/Contraster.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"Contraster/Preview Content\"";
 				DEVELOPMENT_TEAM = F2NH4J9NYG;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -657,7 +654,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.2;
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.georgegillams.Contraster;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -673,7 +670,7 @@
 				CODE_SIGN_ENTITLEMENTS = Contraster/Trunk/Contraster.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"Contraster/Preview Content\"";
 				DEVELOPMENT_TEAM = F2NH4J9NYG;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -685,7 +682,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.2;
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.georgegillams.Contraster;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -699,7 +696,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = F2NH4J9NYG;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
@@ -718,7 +715,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = F2NH4J9NYG;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
@@ -736,7 +733,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = F2NH4J9NYG;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 0.1;
@@ -753,7 +750,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = F2NH4J9NYG;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 0.1;

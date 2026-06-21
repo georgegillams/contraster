@@ -38,9 +38,46 @@ struct TutorialNavigationBar<Leading: View, Center: View>: View {
     }
 }
 
+enum TutorialImageSize {
+    case permission
+    case popover
+    case pick
+    case menu
+
+    var width: CGFloat {
+        switch self {
+        case .menu: 280
+        default: 340
+        }
+    }
+
+    var height: CGFloat {
+        switch self {
+        case .permission: 167
+        case .popover: 231
+        case .pick: 207
+        case .menu: 224
+        }
+    }
+}
+
+private struct TutorialImage: View {
+    var imageName: String
+    var size: TutorialImageSize
+
+    var body: some View {
+        Image(imageName)
+            .resizable()
+            .scaledToFit()
+            .frame(width: size.width, height: size.height)
+            .clipShape(RoundedRectangle(cornerRadius: 24))
+    }
+}
+
 struct TutorialStepContent: View {
     var instructions: [String]
     var imageName: String
+    var imageSize: TutorialImageSize
 
     var body: some View {
         HStack(spacing: 40) {
@@ -50,10 +87,7 @@ struct TutorialStepContent: View {
                 }
             }
             .frame(width: 300)
-            Image(imageName)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 340, height: 200)
+            TutorialImage(imageName: imageName, size: imageSize)
         }
     }
 }
@@ -74,10 +108,7 @@ struct TutorialPart1Content: View {
                 Text("This allows you to capture the colour from a single pixel on the screen. We don't do anything creepy with the image on your screen, and it will never leave your device.")
             }
             .frame(width: 300)
-            Image("grant-permission-1")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 340, height: 200)
+            TutorialImage(imageName: "grant-permission-1", size: .permission)
         }
         .onAppear {
             permissionMonitor.startPolling()
@@ -142,37 +173,33 @@ struct Tutorial: View {
         case 1:
             TutorialStepContent(
                 instructions: [
-                    "Click \"Open System Preferences\", then click the padlock.",
-                    "Next check the box next to \"Contraster\"."
-                ],
-                imageName: "grant-permission-2"
-            )
-        case 2:
-            TutorialStepContent(
-                instructions: [
                     "Click on the Contraster icon in the menu bar to open the popover.",
                     "Then click \"New Pick\", and then click twice anywhere on your screen."
                 ],
-                imageName: "new-pick"
+                imageName: "new-pick",
+                imageSize: .popover
             )
-        case 3:
+        case 2:
             TutorialStepContent(
                 instructions: ["View history of picks in the popover."],
-                imageName: "history"
+                imageName: "history",
+                imageSize: .pick
             )
-        case 4:
+        case 3:
             TutorialStepContent(
                 instructions: [
                     "Hold Option while clicking the Contraster icon in the menu bar to start picking immediately."
                 ],
-                imageName: "menu-icon"
+                imageName: "option-pick",
+                imageSize: .pick
             )
-        case 5:
+        case 4:
             TutorialStepContent(
                 instructions: [
                     "Finally, if you have feedback or want to see this tutorial again, right-click on the Contraster icon in the menu bar."
                 ],
-                imageName: "feedback"
+                imageName: "feedback",
+                imageSize: .menu
             )
         default:
             EmptyView()
@@ -201,7 +228,7 @@ struct Tutorial: View {
                         }
                     } else {
                         GButton(kind: .primary, action: {
-                            appActions.checkScreenRecordingPermissions()
+                            appActions.openScreenRecordingPreferences()
                         }) {
                             Text("Grant permissions")
                         }
@@ -213,18 +240,10 @@ struct Tutorial: View {
                 BackButton(buttonAction: { stage -= 1 })
             } center: {
                 GButton(kind: .primary, action: { stage += 1 }) {
-                    Text("Done")
-                }
-            }
-        case 2:
-            TutorialNavigationBar {
-                BackButton(buttonAction: retreatFromNewPickIntro)
-            } center: {
-                GButton(kind: .primary, action: { stage += 1 }) {
                     Text("Cool 😎")
                 }
             }
-        case 3:
+        case 2:
             TutorialNavigationBar {
                 BackButton(buttonAction: { stage -= 1 })
             } center: {
@@ -232,7 +251,7 @@ struct Tutorial: View {
                     Text("Ok 👌")
                 }
             }
-        case 4:
+        case 3:
             TutorialNavigationBar {
                 BackButton(buttonAction: { stage -= 1 })
             } center: {
@@ -240,7 +259,7 @@ struct Tutorial: View {
                     Text("Nice 👍")
                 }
             }
-        case 5:
+        case 4:
             TutorialNavigationBar {
                 BackButton(buttonAction: { stage -= 1 })
             } center: {
@@ -257,11 +276,7 @@ struct Tutorial: View {
     }
 
     private func advanceFromPermissionsIntro() {
-        stage = permissionMonitor.hasPermissions ? 2 : 1
-    }
-
-    private func retreatFromNewPickIntro() {
-        stage = permissionMonitor.hasPermissions ? 0 : 1
+        stage = 1
     }
 }
 

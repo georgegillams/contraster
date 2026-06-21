@@ -102,6 +102,11 @@ class AppModel: ObservableObject {
         store.deletePair(pickId: pickId)
     }
 
+    func clearPickingHistory() {
+        resultsList.removeAll()
+        store.deleteAllPairs()
+    }
+
     func setFirstWelcomeDone() {
         store.setFirstWelcomeDone()
     }
