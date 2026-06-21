@@ -6,7 +6,6 @@
 import Cocoa
 import SwiftUI
 
-@main
 class AppDelegate: NSObject, NSApplicationDelegate, ContrasterAppActions {
     let colourPickerWindow = NSWindow(
         contentRect: NSMakeRect(0, 0, 50, 50),

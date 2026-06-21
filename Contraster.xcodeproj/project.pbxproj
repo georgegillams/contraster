@@ -40,6 +40,7 @@
 		08FFE00228DC701500B3B2C4 /* ContrastResultsAnimated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08FFE00128DC701500B3B2C4 /* ContrastResultsAnimated.swift */; };
 
 		08REF00128F0000100A1B2C /* ContrasterAppActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08REF01128F0000100A1B2C /* ContrasterAppActions.swift */; };
+		08BLD01E28F0000100A1B2C /* AppMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08REF01E28F0000100A1B2C /* AppMain.swift */; };
 		08REF00228F0000100A1B2C /* ScreenCoordinateMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08REF01228F0000100A1B2C /* ScreenCoordinateMapper.swift */; };
 		08REF00328F0000100A1B2C /* Bundle+Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08REF01328F0000100A1B2C /* Bundle+Version.swift */; };
 		08REF00428F0000100A1B2C /* AppURLs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08REF01428F0000100A1B2C /* AppURLs.swift */; };
@@ -109,6 +110,7 @@
 		08FFE00128DC701500B3B2C4 /* ContrastResultsAnimated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContrastResultsAnimated.swift; sourceTree = "<group>"; };
 
 		08REF01128F0000100A1B2C /* ContrasterAppActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContrasterAppActions.swift; sourceTree = "<group>"; };
+		08REF01E28F0000100A1B2C /* AppMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMain.swift; sourceTree = "<group>"; };
 		08REF01228F0000100A1B2C /* ScreenCoordinateMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenCoordinateMapper.swift; sourceTree = "<group>"; };
 		08REF01328F0000100A1B2C /* Bundle+Version.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Version.swift"; sourceTree = "<group>"; };
 		08REF01428F0000100A1B2C /* AppURLs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppURLs.swift; sourceTree = "<group>"; };
@@ -282,6 +284,7 @@
 		08GRP00128F0000100A1B2C /* App */ = {
 			isa = PBXGroup;
 			children = (
+				08REF01E28F0000100A1B2C /* AppMain.swift */,
 				08REF01128F0000100A1B2C /* ContrasterAppActions.swift */,
 			);
 			path = App;
@@ -464,6 +467,7 @@
 				080E63BF28E305F70041AE85 /* PickedColorPair+CoreDataClass.swift in Sources */,
 				086C010628D511A600C59051 /* NSScreen+Functions.swift in Sources */,
 				089B04BF28DB507F00213E38 /* AppModel.swift in Sources */,
+				08BLD01E28F0000100A1B2C /* AppMain.swift in Sources */,
 				08DF062828C2298300F1B733 /* AppDelegate.swift in Sources */,
 				08REF00128F0000100A1B2C /* ContrasterAppActions.swift in Sources */,
 				08REF00228F0000100A1B2C /* ScreenCoordinateMapper.swift in Sources */,

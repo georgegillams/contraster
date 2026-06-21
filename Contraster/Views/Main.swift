@@ -81,6 +81,10 @@ private struct PickingStatusHeader: View {
                 Text("Press ESC to cancel")
                     .font(InterfaceConstants.popoverSecondaryFont)
                     .foregroundStyle(.secondary)
+            } else {
+                Text("💡Tip: Option + click the menu item to start picking immediately")
+                    .font(InterfaceConstants.popoverSecondaryFont)
+                    .foregroundStyle(.secondary)
             }
         }
     }
