@@ -1,12 +1,9 @@
 //
-//  ResultModel.swift
+//  AppModel.swift
 //  Contraster
-//
-//  Created by George Gillams on 07/09/2022.
 //
 
 import SwiftUI
-import Foundation
 import AppKit
 
 enum PickingMode {
@@ -16,7 +13,8 @@ enum PickingMode {
 }
 
 class AppModel: ObservableObject {
-    
+    private let store = ColorPairStore.shared
+
     @Published var currentPickerColor: Color?
     @Published var currentResult: ResultsModel?
     @Published var resultsList = [ResultsModel]()
@@ -25,27 +23,23 @@ class AppModel: ObservableObject {
     @Published var currentScreenshot: NSImage?
     @Published var currentScreenFrame: NSRect = .zero
     @Published var magnificationScale: CGFloat = InterfaceConstants.defaultMagnificationScale
-    
+
     init() {
-//        CoreDataHelper().dropAllData()
-        readCoreDataPairs()
-        
+        loadHistory()
         updatePickingMode()
     }
-    
-    func updatePickingMode () {
-        if (currentResult == nil) {
+
+    func updatePickingMode() {
+        if currentResult == nil {
             pickingMode = .notPicking
-        }
-        else if (currentResult?.color1Captured == false) {
+        } else if currentResult?.color1Captured == false {
             pickingMode = .pickingFirstColor
-        }
-        else if (currentResult?.color1Captured == true && currentResult?.color2Captured == false) {
+        } else if currentResult?.color1Captured == true && currentResult?.color2Captured == false {
             pickingMode = .pickingSecondColor
         }
         gDebugPrint("updatePickingMode: \(pickingMode)")
     }
-    
+
     func createNewPick() {
         gDebugPrint("createNewPick")
         resetMagnificationScale()
@@ -67,150 +61,61 @@ class AppModel: ObservableObject {
         magnificationScale = CGFloat(clampedScale)
         gDebugPrint("adjustMagnificationScale: \(magnificationScale)")
     }
-    
+
     func cancelPick() {
         gDebugPrint("cancelPick")
         currentResult = nil
+        currentPickerColor = nil
         updatePickingMode()
     }
-    
-    func updateFirstColor(color: Color) {
-        if (currentResult == nil) {
-            return
-        }
-        currentResult!.color1 = color
+
+    func updatePreviewColor(_ color: Color, slot: PickingColorSlot) {
+        guard let currentResult else { return }
+        currentResult.setPreviewColor(color, slot: slot)
         currentPickerColor = color
     }
-    
-    func updateSecondColor(color: Color) {
-        if (currentResult == nil) {
-            return
-        }
-        currentResult!.color2 = color
-        currentPickerColor = color
-    }
-    
+
     func captureFirstColor() {
-        if (currentResult == nil) {
-            return
-        }
-        currentResult?.color1Captured = true
+        guard let currentResult else { return }
+        currentResult.color1Captured = true
+        currentResult.commitCalculations()
         updatePickingMode()
     }
-    
+
     func captureSecondColor() {
-        if (currentResult == nil) {
-            return
-        }
-        currentResult?.color2Captured = true
-        resultsList.insert(currentResult!, at: 0)
-        saveCurrentResultToCoreData()
+        guard let result = currentResult else { return }
+        result.color2Captured = true
+        result.commitCalculations()
+        resultsList.insert(result, at: 0)
+        store.savePair(
+            pickId: result.pickId,
+            color1: result.color1,
+            color2: result.color2
+        )
         currentResult = nil
+        currentPickerColor = nil
         updatePickingMode()
     }
-    
+
     func deleteColourPair(pickId: String) {
-        resultsList.removeAll(where: { resultModel in
-            resultModel.pickId == pickId
-        })
-        deleteResultFromCoreData(pickId: pickId)
+        resultsList.removeAll { $0.pickId == pickId }
+        store.deletePair(pickId: pickId)
     }
-    
-    private func readCoreDataPairs() {
-        let helper = CoreDataHelper()
-        let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "PickedColorPair")
-        do {
-            if let colorPairList = try helper.context.fetch(fr) as? [PickedColorPair] {
-                colorPairList.forEach({ pair in
-                    let color1 = pair.hexColor1 != nil ? Color(hex: pair.hexColor1!) : nil
-                    let color2 = pair.hexColor2 != nil ? Color(hex: pair.hexColor2!) : nil
-                    resultsList.insert(ResultsModel(pickId: pair.pickId, color1: color1, color2: color2), at: 0)
-                })
-            }
-        } catch {
-            print("Could not read contact fetcher")
-        }
-    }
-    
-    private func deleteResultFromCoreData(pickId: String) {
-        let helper = CoreDataHelper()
-        let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "PickedColorPair")
-        do {
-            if let colorPairList = try helper.context.fetch(fr) as? [PickedColorPair] {
-                colorPairList.forEach({ pair in
-                    if (pair.pickId == pickId) {
-                        helper.context.delete(pair)
-                    }
-                })
-            }
-        } catch {
-            print("Could not delete result from core data")
-        }
-    
-    do {
-        try helper.context.save()
-    } catch {
-        print("error in saving context")
-    }
-    }
-    
-    private func saveCurrentResultToCoreData() {
-        let helper = CoreDataHelper()
-        guard let newColorPair = NSEntityDescription.insertNewObject(
-                    forEntityName: "PickedColorPair",
-                    into: helper.context) as? PickedColorPair else { return }
-        newColorPair.pickId = currentResult?.pickId
-        newColorPair.hexColor1 = currentResult?.color1?.hexString
-        newColorPair.hexColor2 = currentResult?.color2?.hexString
-        
-        do {
-            try helper.context.save()
-        } catch {
-            print("error in saving context")
-        }
-    }
-    
+
     func setFirstWelcomeDone() {
-        let helper = CoreDataHelper()
-        let fr = NSFetchRequest<Settings>(entityName: "Settings")
-        
-        do {
-            let settings = try helper.context.fetch(fr)
-            let settingsObject: Settings
-            
-            if let existingSettings = settings.first {
-                // Update existing Settings object
-                settingsObject = existingSettings
-            } else {
-                // Create new Settings object if none exists
-                guard let newSettings = NSEntityDescription.insertNewObject(
-                    forEntityName: "Settings",
-                    into: helper.context) as? Settings else {
-                    print("Failed to create new Settings object")
-                    return
-                }
-                settingsObject = newSettings
-            }
-            
-            settingsObject.firstWelcomeDone = true
-            
-            try helper.context.save()
-        } catch {
-            print("Error in setFirstWelcomeDone: \(error)")
-        }
+        store.setFirstWelcomeDone()
     }
-    
+
     func isFirstWelcomeDone() -> Bool {
-        let helper = CoreDataHelper()
-        let fr = NSFetchRequest<Settings>(entityName: "Settings")
-        
-        do {
-            if let settings = try helper.context.fetch(fr).first {
-                return settings.firstWelcomeDone
-            }
-        } catch {
-            print("Could not read settings: \(error)")
+        store.isFirstWelcomeDone()
+    }
+
+    private func loadHistory() {
+        store.loadAllPairs().forEach { pair in
+            resultsList.insert(
+                ResultsModel(pickId: pair.pickId, color1: pair.color1, color2: pair.color2),
+                at: 0
+            )
         }
-        return false
     }
 }

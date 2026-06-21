@@ -2,12 +2,10 @@
 //  ContrastResult.swift
 //  Contraster
 //
-//  Created by George Gillams on 03/09/2022.
-//
 
 import SwiftUI
 
-class ContrastResultHelpers {
+enum ContrastResultHelpers {
     static func textForElementType(elementType: ElementType) -> String {
         switch elementType {
         case .largeText:
@@ -15,10 +13,10 @@ class ContrastResultHelpers {
         case .smallText:
             return "Sm"
         case .graphical:
-            return "☂️"
+            return "Gfx"
         }
     }
-    
+
     static func textForComplianceLevel(complianceLevel: ComplianceLevel) -> String {
         switch complianceLevel {
         case .passAAA:
@@ -31,12 +29,10 @@ class ContrastResultHelpers {
             return "…"
         }
     }
-    
+
     static func colorForComplianceLevel(complianceLevel: ComplianceLevel) -> Color {
         switch complianceLevel {
-        case .passAAA:
-            return Color("PositiveColor")
-        case .passAA:
+        case .passAAA, .passAA:
             return Color("PositiveColor")
         case .fail:
             return Color("DangerColor")
@@ -46,14 +42,13 @@ class ContrastResultHelpers {
     }
 }
 
-
 struct ContrastResult: View {
     var elementType: ElementType
     var level: ComplianceLevel
-    
+
     var body: some View {
         HStack(spacing: 4) {
-            if(elementType == .graphical) {
+            if elementType == .graphical {
                 Image(systemName: "theatermask.and.paintbrush")
                     .font(InterfaceConstants.popoverResultFont)
             } else {
@@ -61,7 +56,7 @@ struct ContrastResult: View {
                     .font(InterfaceConstants.popoverResultFont)
                     .lineLimit(1)
             }
-            if(level == .fail) {
+            if level == .fail {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .font(InterfaceConstants.popoverResultFont)
                     .foregroundColor(ContrastResultHelpers.colorForComplianceLevel(complianceLevel: level))
@@ -84,5 +79,3 @@ struct ContrastResult_Previews: PreviewProvider {
         ContrastResult(elementType: .graphical, level: .fail)
     }
 }
-
-
