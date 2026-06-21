@@ -109,25 +109,19 @@ private struct PickingActionButtons: View {
             .accessibilityLabel("Open menu")
 
             if isPicking {
-                Button(action: {
+                GButton(kind: .destructive, size: .small, action: {
                     appModel.cancelPick()
                     appActions.updateMouseTrapWindow()
                 }) {
                     Label("Cancel", systemImage: "xmark")
                 }
-                .buttonStyle(.bordered)
-                .controlSize(.large)
-                .tint(Color("DangerColor"))
             } else {
-                Button(action: {
+                GButton(kind: .primary, size: .small, action: {
                     appModel.createNewPick()
                     appActions.updateMouseTrapWindow()
                 }) {
                     Label("New pick", systemImage: "eyedropper.halffull")
                 }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
-                .tint(Color("CTABackgroundColor"))
             }
         }
     }

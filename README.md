@@ -61,7 +61,7 @@ In Xcode:
 2. Choose **My Mac** as the run destination.
 3. Press **Run** (⌘R).
 
-The app builds and launches from Xcode. Look for the eyedropper icon in the menu bar.
+The app builds and launches from Xcode. Look for the Contraster icon in the menu bar.
 
 ### Schemes
 

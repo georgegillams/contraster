@@ -3,46 +3,44 @@
 //  Contraster
 //
 
+import AppKit
 import SwiftUI
 
 struct BackButton: View {
     var buttonAction: () -> Void
 
     var body: some View {
-        GButton(role: nil, backgroundColor: .gray, action: buttonAction) {
+        GButton(kind: .secondary, action: buttonAction) {
             Image(systemName: "arrow.left")
-            Text("Back").foregroundColor(.white)
+            Text("Back")
         }
     }
 }
 
-struct TutorialStepFooter: View {
-    var backButtonAction: () -> Void
-    var forwardButtonAction: () -> Void
-    var forwardLabel: String
+struct TutorialNavigationBar<Leading: View, Center: View>: View {
+    @ViewBuilder var leading: () -> Leading
+    @ViewBuilder var center: () -> Center
 
     var body: some View {
-        HStack {
-            BackButton(buttonAction: backButtonAction)
-            Spacer()
-            GButton(role: nil, action: forwardButtonAction) {
-                Text(forwardLabel).foregroundColor(.white)
+        VStack(spacing: 0) {
+            Divider()
+            ZStack {
+                HStack {
+                    leading()
+                    Spacer(minLength: 0)
+                }
+                center()
             }
-            Spacer()
-            BackButton(buttonAction: backButtonAction)
-                .opacity(0)
-                .accessibilityHidden(true)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 12)
         }
-        .frame(maxWidth: .infinity)
+        .background(Color(nsColor: .windowBackgroundColor))
     }
 }
 
-struct TutorialStep: View {
+struct TutorialStepContent: View {
     var instructions: [String]
     var imageName: String
-    var backButtonAction: (() -> Void)?
-    var forwardButtonAction: () -> Void
-    var forwardLabel: String
 
     var body: some View {
         HStack(spacing: 40) {
@@ -57,30 +55,10 @@ struct TutorialStep: View {
                 .scaledToFit()
                 .frame(width: 340, height: 200)
         }
-        Spacer()
-        if let backButtonAction {
-            TutorialStepFooter(
-                backButtonAction: backButtonAction,
-                forwardButtonAction: forwardButtonAction,
-                forwardLabel: forwardLabel
-            )
-        } else {
-            HStack(spacing: 12) {
-                forwardButton
-            }
-        }
-    }
-
-    @ViewBuilder
-    private var forwardButton: some View {
-        GButton(role: nil, action: forwardButtonAction) {
-            Text(forwardLabel).foregroundColor(.white)
-        }
     }
 }
 
-struct TutorialPart1: View {
-    var forwardButtonAction: () -> Void
+struct TutorialPart1Content: View {
     let appActions: ContrasterAppActions
     @ObservedObject var permissionMonitor: ScreenRecordingPermissionMonitor
 
@@ -89,7 +67,7 @@ struct TutorialPart1: View {
             VStack(alignment: .leading, spacing: 10) {
                 if permissionMonitor.hasPermissions {
                     Text("Screen recording permission granted ✓")
-                        .foregroundColor(.green)
+                        .foregroundStyle(Color("PositiveColor"))
                 } else {
                     Text("Before you get started, you'll need to enable screen-recording permission.")
                 }
@@ -100,25 +78,6 @@ struct TutorialPart1: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 340, height: 200)
-        }
-        Spacer()
-        HStack(spacing: 12) {
-            if permissionMonitor.hasPermissions {
-                GButton(role: nil, backgroundColor: .gray, action: {
-                    appActions.openScreenRecordingPreferences()
-                }) {
-                    Text("Manage permissions").foregroundColor(.white)
-                }
-                GButton(role: nil, action: forwardButtonAction) {
-                    Text("Next").foregroundColor(.white)
-                }
-            } else {
-                GButton(role: nil, action: {
-                    appActions.checkScreenRecordingPermissions()
-                }) {
-                    Text("Grant permissions").foregroundColor(.white)
-                }
-            }
         }
         .onAppear {
             permissionMonitor.startPolling()
@@ -145,68 +104,164 @@ struct Tutorial: View {
         self.permissionMonitor = permissionMonitor
     }
 
+    private var headerIconSize: CGFloat {
+        stage == 0 ? 100 : 64
+    }
+
     var body: some View {
-        VStack(spacing: 10) {
-            Text("Welcome to").font(Font.system(size: 24))
-            Text("Contraster!").font(Font.system(size: 32)).bold()
-            Image("eyedropper-3d")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 100, height: 100)
-            Spacer()
-            switch stage {
-            case 0:
-                TutorialPart1(forwardButtonAction: { stage += 1 }, appActions: appActions, permissionMonitor: permissionMonitor)
-            case 1:
-                TutorialStep(
-                    instructions: [
-                        "Click \"Open System Preferences\", then click the padlock.",
-                        "Next check the box next to \"Contraster\"."
-                    ],
-                    imageName: "grant-permission-2",
-                    backButtonAction: { stage -= 1 },
-                    forwardButtonAction: { stage += 1 },
-                    forwardLabel: "Done"
-                )
-            case 2:
-                TutorialStep(
-                    instructions: [
-                        "Click on the eye-dropper in the menu bar to open the popover.",
-                        "Then click \"New Pick\", and then click twice anywhere on your screen."
-                    ],
-                    imageName: "new-pick",
-                    backButtonAction: { stage -= 1 },
-                    forwardButtonAction: { stage += 1 },
-                    forwardLabel: "Cool 😎"
-                )
-            case 3:
-                TutorialStep(
-                    instructions: ["View history of picks in the popover."],
-                    imageName: "history",
-                    backButtonAction: { stage -= 1 },
-                    forwardButtonAction: { stage += 1 },
-                    forwardLabel: "Cool 😎"
-                )
-            case 4:
-                TutorialStep(
-                    instructions: [
-                        "Finally, if you have feedback or want to see this tutorial again, right-click on the icon in the menu bar."
-                    ],
-                    imageName: "feedback",
-                    backButtonAction: { stage -= 1 },
-                    forwardButtonAction: {
-                        appModel.setFirstWelcomeDone()
-                        appActions.hideTutorial()
-                    },
-                    forwardLabel: "Got it!"
-                )
-            default:
-                EmptyView()
+        VStack(spacing: 0) {
+            VStack(spacing: 10) {
+                Text("Welcome to").font(Font.system(size: 24))
+                Text("Contraster!").font(Font.system(size: 32)).bold()
+                if let icon = NSApplication.shared.applicationIconImage {
+                    Image(nsImage: icon)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: headerIconSize, height: headerIconSize)
+                }
+                Spacer(minLength: 0)
+                stepContent
+                Spacer(minLength: 0)
             }
-            Spacer()
+            .padding(EdgeInsets(top: 12, leading: 12, bottom: 12, trailing: 12))
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            navigationBar
         }
-        .padding(EdgeInsets(top: 12, leading: 12, bottom: 0, trailing: 12))
-        .frame(minWidth: 800, maxWidth: .infinity, minHeight: 500, maxHeight: .infinity, alignment: .center)
+        .frame(minWidth: 800, maxWidth: .infinity, minHeight: 500, maxHeight: .infinity)
+    }
+
+    @ViewBuilder
+    private var stepContent: some View {
+        switch stage {
+        case 0:
+            TutorialPart1Content(
+                appActions: appActions,
+                permissionMonitor: permissionMonitor
+            )
+        case 1:
+            TutorialStepContent(
+                instructions: [
+                    "Click \"Open System Preferences\", then click the padlock.",
+                    "Next check the box next to \"Contraster\"."
+                ],
+                imageName: "grant-permission-2"
+            )
+        case 2:
+            TutorialStepContent(
+                instructions: [
+                    "Click on the Contraster icon in the menu bar to open the popover.",
+                    "Then click \"New Pick\", and then click twice anywhere on your screen."
+                ],
+                imageName: "new-pick"
+            )
+        case 3:
+            TutorialStepContent(
+                instructions: ["View history of picks in the popover."],
+                imageName: "history"
+            )
+        case 4:
+            TutorialStepContent(
+                instructions: [
+                    "Hold Option while clicking the Contraster icon in the menu bar to start picking immediately."
+                ],
+                imageName: "menu-icon"
+            )
+        case 5:
+            TutorialStepContent(
+                instructions: [
+                    "Finally, if you have feedback or want to see this tutorial again, right-click on the Contraster icon in the menu bar."
+                ],
+                imageName: "feedback"
+            )
+        default:
+            EmptyView()
+        }
+    }
+
+    @ViewBuilder
+    private var navigationBar: some View {
+        switch stage {
+        case 0:
+            TutorialNavigationBar {
+                 if permissionMonitor.hasPermissions {
+                    GButton(kind: .secondary, action: {
+                        appActions.openScreenRecordingPreferences()
+                    }) {
+                        Text("Manage permissions")
+                    }
+                } else {
+                    EmptyView()
+                }
+            } center: {
+                HStack(spacing: 12) {
+                    if permissionMonitor.hasPermissions {
+                        GButton(kind: .primary, action: advanceFromPermissionsIntro) {
+                            Text("Next")
+                        }
+                    } else {
+                        GButton(kind: .primary, action: {
+                            appActions.checkScreenRecordingPermissions()
+                        }) {
+                            Text("Grant permissions")
+                        }
+                    }
+                }
+            }
+        case 1:
+            TutorialNavigationBar {
+                BackButton(buttonAction: { stage -= 1 })
+            } center: {
+                GButton(kind: .primary, action: { stage += 1 }) {
+                    Text("Done")
+                }
+            }
+        case 2:
+            TutorialNavigationBar {
+                BackButton(buttonAction: retreatFromNewPickIntro)
+            } center: {
+                GButton(kind: .primary, action: { stage += 1 }) {
+                    Text("Cool 😎")
+                }
+            }
+        case 3:
+            TutorialNavigationBar {
+                BackButton(buttonAction: { stage -= 1 })
+            } center: {
+                GButton(kind: .primary, action: { stage += 1 }) {
+                    Text("Ok 👌")
+                }
+            }
+        case 4:
+            TutorialNavigationBar {
+                BackButton(buttonAction: { stage -= 1 })
+            } center: {
+                GButton(kind: .primary, action: { stage += 1 }) {
+                    Text("Nice 👍")
+                }
+            }
+        case 5:
+            TutorialNavigationBar {
+                BackButton(buttonAction: { stage -= 1 })
+            } center: {
+                GButton(kind: .primary, action: {
+                    appModel.setFirstWelcomeDone()
+                    appActions.hideTutorial()
+                }) {
+                    Text("Got it!")
+                }
+            }
+        default:
+            EmptyView()
+        }
+    }
+
+    private func advanceFromPermissionsIntro() {
+        stage = permissionMonitor.hasPermissions ? 2 : 1
+    }
+
+    private func retreatFromNewPickIntro() {
+        stage = permissionMonitor.hasPermissions ? 0 : 1
     }
 }
 

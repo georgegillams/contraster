@@ -156,6 +156,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ContrasterAppActions {
 
         if isGDebugScheme {
             runDebugStartupSequence()
+            showWelcomeTutorial()
         } else if appModel.isFirstWelcomeDone() {
             checkScreenRecordingPermissions()
         } else {

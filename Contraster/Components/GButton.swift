@@ -5,46 +5,116 @@
 
 import SwiftUI
 
+enum GButtonKind {
+    case primary
+    case secondary
+    case destructive
+}
+
+enum GButtonSize {
+    case regular
+    case small
+
+    var height: CGFloat {
+        switch self {
+        case .regular: 34
+        case .small: 28
+        }
+    }
+
+    var padding: EdgeInsets {
+        switch self {
+        case .regular:
+            EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16)
+        case .small:
+            EdgeInsets(top: 2, leading: 12, bottom: 2, trailing: 12)
+        }
+    }
+
+    var cornerRadius: CGFloat {
+        switch self {
+        case .regular: 12
+        case .small: 10
+        }
+    }
+}
+
 struct GButton<Label>: View where Label: View {
-    var role: ButtonRole?
+    var kind: GButtonKind
+    var size: GButtonSize
     var action: () -> Void
     var label: () -> Label
-    var backgroundColor: Color
+
+    private var backgroundColor: Color {
+        switch kind {
+        case .primary:
+            Color("PrimaryColorDark")
+        case .secondary:
+            Color("SecondaryButtonBackgroundColor")
+        case .destructive:
+            Color("DangerColor")
+        }
+    }
+
+    private var foregroundColor: Color {
+        switch kind {
+        case .primary:
+            Color("PrimaryButtonForegroundColor")
+        case .secondary:
+            Color("SecondaryButtonForegroundColor")
+        case .destructive:
+            Color("DestructiveButtonForegroundColor")
+        }
+    }
 
     init(
-        role: ButtonRole?,
-        backgroundColor: Color = Color.blue,
+        kind: GButtonKind = .primary,
+        size: GButtonSize = .regular,
         action: @escaping () -> Void,
         @ViewBuilder label: @escaping () -> Label
     ) {
-        self.role = role
-        self.backgroundColor = backgroundColor
+        self.kind = kind
+        self.size = size
         self.action = action
         self.label = label
     }
 
     var body: some View {
-        Button(role: role, action: action) {
-            HStack {
+        Button(action: action) {
+            HStack(spacing: size == .small ? 4 : 6) {
                 label()
             }
-            .padding(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
-            .frame(height: 34)
+            .padding(size.padding)
+            .frame(height: size.height)
+            .foregroundStyle(foregroundColor)
             .background(backgroundColor)
         }
         .buttonStyle(.plain)
-        .frame(height: 34)
+        .frame(height: size.height)
         .background(backgroundColor)
-        .cornerRadius(8)
+        .cornerRadius(size.cornerRadius)
     }
 }
 
 struct GButton_Previews: PreviewProvider {
     static var previews: some View {
-        GButton(role: nil, backgroundColor: .yellow, action: {
-            print("Pressed")
-        }) {
-            Text("Button")
+        VStack(spacing: 12) {
+            GButton(kind: .primary, action: {}) {
+                Text("Primary")
+            }
+            GButton(kind: .secondary, action: {}) {
+                Text("Secondary")
+            }
+            GButton(kind: .destructive, action: {}) {
+                Text("Destructive")
+            }
+            GButton(kind: .primary, size: .small, action: {}) {
+                Label("New pick", systemImage: "eyedropper.halffull")
+            }
+            GButton(kind: .destructive, size: .small, action: {}) {
+                Label("Cancel", systemImage: "xmark")
+            }
         }
+        .padding()
     }
 }
