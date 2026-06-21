@@ -15,15 +15,11 @@
 		0826577228C225540069D5C5 /* contrasterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0826577128C225540069D5C5 /* contrasterTests.swift */; };
 		0826577C28C225540069D5C5 /* contrasterUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0826577B28C225540069D5C5 /* contrasterUITests.swift */; };
 		0826577E28C225540069D5C5 /* contrasterUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0826577D28C225540069D5C5 /* contrasterUITestsLaunchTests.swift */; };
-		082E258F28C632DB00AF46DF /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082E258E28C632DB00AF46DF /* Line.swift */; };
-		082E259128C6343300AF46DF /* JoiningLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082E259028C6343300AF46DF /* JoiningLine.swift */; };
 		08458FED2AA36D7300F42A92 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08458FEC2AA36D7300F42A92 /* CardView.swift */; };
 		0848F72028DC84FF00940802 /* MouseTrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0848F71F28DC84FF00940802 /* MouseTrap.swift */; };
 		0866CAEC28C2613A0092633D /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0866CAEA28C2613A0092633D /* Main.swift */; };
 		0866CAED28C2613A0092633D /* About.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0866CAEB28C2613A0092633D /* About.swift */; };
-		0866CAEF28C261540092633D /* PagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0866CAEE28C261540092633D /* PagerView.swift */; };
 		0866CAF728C264820092633D /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0866CAF628C264820092633D /* Info.plist */; };
-		0866CAF828C265500092633D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0866CAF228C264410092633D /* Main.storyboard */; };
 		0866CAFB28C265CF0092633D /* ColourPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0866CAFA28C265CF0092633D /* ColourPreview.swift */; };
 		0866CAFE28C26A950092633D /* Color+Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0866CAFD28C26A950092633D /* Color+Functions.swift */; };
 		086C010628D511A600C59051 /* NSScreen+Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086C010528D511A600C59051 /* NSScreen+Functions.swift */; };
@@ -31,19 +27,31 @@
 		08DBG00228F0000100A1B2C /* Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DBG00128F0000100A1B2C /* Debug.swift */; };
 		088AC0EB28C8E35300153A74 /* ResultsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088AC0EA28C8E35300153A74 /* ResultsModel.swift */; };
 		088AC0ED28C8E3F100153A74 /* Compliance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088AC0EC28C8E3F100153A74 /* Compliance.swift */; };
-		088AC0F228C905F200153A74 /* ColourPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088AC0F128C905F200153A74 /* ColourPicker.swift */; };
 		089B04BF28DB507F00213E38 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089B04BE28DB507F00213E38 /* AppModel.swift */; };
 		08B0CC9028E30793004A319C /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B0CC8F28E30793004A319C /* CoreDataHelper.swift */; };
 		08B0CC9228E307BB004A319C /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B0CC9128E307BB004A319C /* CoreDataStack.swift */; };
 		08D2E2BC28DCC69E0088428F /* InterfaceConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D2E2BB28DCC69E0088428F /* InterfaceConstants.swift */; };
 		08DF062828C2298300F1B733 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DF062728C2298300F1B733 /* AppDelegate.swift */; };
-		08DF062A28C229B500F1B733 /* AppDelegate+Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DF062928C229B500F1B733 /* AppDelegate+Functions.swift */; };
 		08E6E68528E560C90093D89B /* Settings+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E6E68328E560C90093D89B /* Settings+CoreDataClass.swift */; };
 		08E6E68628E560C90093D89B /* Settings+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E6E68428E560C90093D89B /* Settings+CoreDataProperties.swift */; };
 		08EADAA828E22E98001289BD /* GButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EADAA728E22E98001289BD /* GButton.swift */; };
 		08EAF87E28E5A4DD00945397 /* Tutorial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EAF87D28E5A4DD00945397 /* Tutorial.swift */; };
 		08F6419E28C3AD10008EB225 /* ContrastResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F6419D28C3AD10008EB225 /* ContrastResults.swift */; };
 		08FFE00228DC701500B3B2C4 /* ContrastResultsAnimated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08FFE00128DC701500B3B2C4 /* ContrastResultsAnimated.swift */; };
+
+		08REF00128F0000100A1B2C /* ContrasterAppActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08REF01128F0000100A1B2C /* ContrasterAppActions.swift */; };
+		08REF00228F0000100A1B2C /* ScreenCoordinateMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08REF01228F0000100A1B2C /* ScreenCoordinateMapper.swift */; };
+		08REF00328F0000100A1B2C /* Bundle+Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08REF01328F0000100A1B2C /* Bundle+Version.swift */; };
+		08REF00428F0000100A1B2C /* AppURLs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08REF01428F0000100A1B2C /* AppURLs.swift */; };
+		08REF00528F0000100A1B2C /* MagnificationImageRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08REF01528F0000100A1B2C /* MagnificationImageRenderer.swift */; };
+		08REF00628F0000100A1B2C /* ContrastCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08REF01628F0000100A1B2C /* ContrastCalculator.swift */; };
+		08REF00728F0000100A1B2C /* ColorPairStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08REF01728F0000100A1B2C /* ColorPairStore.swift */; };
+		08REF00828F0000100A1B2C /* ScreenRecordingPermissionMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08REF01828F0000100A1B2C /* ScreenRecordingPermissionMonitor.swift */; };
+		08REF00928F0000100A1B2C /* ScreenshotCaptureService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08REF01928F0000100A1B2C /* ScreenshotCaptureService.swift */; };
+		08REF00A28F0000100A1B2C /* ColorSampler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08REF01A28F0000100A1B2C /* ColorSampler.swift */; };
+		08REF00B28F0000100A1B2C /* ColorPickingCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08REF01B28F0000100A1B2C /* ColorPickingCoordinator.swift */; };
+		08REF00C28F0000100A1B2C /* PopoverController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08REF01C28F0000100A1B2C /* PopoverController.swift */; };
+		08REF00D28F0000100A1B2C /* ContrastCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08REF01D28F0000100A1B2C /* ContrastCalculatorTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,14 +83,10 @@
 		0826577728C225540069D5C5 /* ContrasterUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ContrasterUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0826577B28C225540069D5C5 /* contrasterUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = contrasterUITests.swift; sourceTree = "<group>"; };
 		0826577D28C225540069D5C5 /* contrasterUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = contrasterUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		082E258E28C632DB00AF46DF /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
-		082E259028C6343300AF46DF /* JoiningLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoiningLine.swift; sourceTree = "<group>"; };
 		08458FEC2AA36D7300F42A92 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		0848F71F28DC84FF00940802 /* MouseTrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MouseTrap.swift; sourceTree = "<group>"; };
 		0866CAEA28C2613A0092633D /* Main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
 		0866CAEB28C2613A0092633D /* About.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = About.swift; sourceTree = "<group>"; };
-		0866CAEE28C261540092633D /* PagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerView.swift; sourceTree = "<group>"; };
-		0866CAF228C264410092633D /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		0866CAF528C264820092633D /* Contraster.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Contraster.entitlements; sourceTree = "<group>"; };
 		0866CAF628C264820092633D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0866CAFA28C265CF0092633D /* ColourPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColourPreview.swift; sourceTree = "<group>"; };
@@ -92,19 +96,31 @@
 		08DBG00128F0000100A1B2C /* Debug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debug.swift; sourceTree = "<group>"; };
 		088AC0EA28C8E35300153A74 /* ResultsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsModel.swift; sourceTree = "<group>"; };
 		088AC0EC28C8E3F100153A74 /* Compliance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Compliance.swift; sourceTree = "<group>"; };
-		088AC0F128C905F200153A74 /* ColourPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColourPicker.swift; sourceTree = "<group>"; };
 		089B04BE28DB507F00213E38 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		08B0CC8F28E30793004A319C /* CoreDataHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
 		08B0CC9128E307BB004A319C /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		08D2E2BB28DCC69E0088428F /* InterfaceConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceConstants.swift; sourceTree = "<group>"; };
 		08DF062728C2298300F1B733 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		08DF062928C229B500F1B733 /* AppDelegate+Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+Functions.swift"; sourceTree = "<group>"; };
 		08E6E68328E560C90093D89B /* Settings+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Settings+CoreDataClass.swift"; path = "Contraster/Settings+CoreDataClass.swift"; sourceTree = "<group>"; };
 		08E6E68428E560C90093D89B /* Settings+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Settings+CoreDataProperties.swift"; path = "Contraster/Settings+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		08EADAA728E22E98001289BD /* GButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GButton.swift; sourceTree = "<group>"; };
 		08EAF87D28E5A4DD00945397 /* Tutorial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tutorial.swift; sourceTree = "<group>"; };
 		08F6419D28C3AD10008EB225 /* ContrastResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContrastResults.swift; sourceTree = "<group>"; };
 		08FFE00128DC701500B3B2C4 /* ContrastResultsAnimated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContrastResultsAnimated.swift; sourceTree = "<group>"; };
+
+		08REF01128F0000100A1B2C /* ContrasterAppActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContrasterAppActions.swift; sourceTree = "<group>"; };
+		08REF01228F0000100A1B2C /* ScreenCoordinateMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenCoordinateMapper.swift; sourceTree = "<group>"; };
+		08REF01328F0000100A1B2C /* Bundle+Version.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Version.swift"; sourceTree = "<group>"; };
+		08REF01428F0000100A1B2C /* AppURLs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppURLs.swift; sourceTree = "<group>"; };
+		08REF01528F0000100A1B2C /* MagnificationImageRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagnificationImageRenderer.swift; sourceTree = "<group>"; };
+		08REF01628F0000100A1B2C /* ContrastCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContrastCalculator.swift; sourceTree = "<group>"; };
+		08REF01728F0000100A1B2C /* ColorPairStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPairStore.swift; sourceTree = "<group>"; };
+		08REF01828F0000100A1B2C /* ScreenRecordingPermissionMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenRecordingPermissionMonitor.swift; sourceTree = "<group>"; };
+		08REF01928F0000100A1B2C /* ScreenshotCaptureService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotCaptureService.swift; sourceTree = "<group>"; };
+		08REF01A28F0000100A1B2C /* ColorSampler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSampler.swift; sourceTree = "<group>"; };
+		08REF01B28F0000100A1B2C /* ColorPickingCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickingCoordinator.swift; sourceTree = "<group>"; };
+		08REF01C28F0000100A1B2C /* PopoverController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverController.swift; sourceTree = "<group>"; };
+		08REF01D28F0000100A1B2C /* ContrastCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContrastCalculatorTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,6 +177,9 @@
 		0826575E28C225510069D5C5 /* Contraster */ = {
 			isa = PBXGroup;
 			children = (
+				08GRP00128F0000100A1B2C /* App */,
+				08GRP00228F0000100A1B2C /* Services */,
+				08GRP00328F0000100A1B2C /* Persistence */,
 				08D2E2BA28DCC6570088428F /* Constants */,
 				088AC0E928C8E33B00153A74 /* Models */,
 				0866CAFC28C26A830092633D /* Utils */,
@@ -170,7 +189,6 @@
 				0826576328C225540069D5C5 /* Assets.xcassets */,
 				0826576528C225540069D5C5 /* Preview Content */,
 				08DF062728C2298300F1B733 /* AppDelegate.swift */,
-				08DF062928C229B500F1B733 /* AppDelegate+Functions.swift */,
 				080E63BA28E305C60041AE85 /* PersistedDataModel.xcdatamodeld */,
 			);
 			path = Contraster;
@@ -186,6 +204,7 @@
 		0826577028C225540069D5C5 /* ContrasterTests */ = {
 			isa = PBXGroup;
 			children = (
+				08REF01D28F0000100A1B2C /* ContrastCalculatorTests.swift */,
 				0826577128C225540069D5C5 /* contrasterTests.swift */,
 			);
 			path = ContrasterTests;
@@ -215,7 +234,6 @@
 			isa = PBXGroup;
 			children = (
 				0866CAF628C264820092633D /* Info.plist */,
-				0866CAF228C264410092633D /* Main.storyboard */,
 				0866CAF528C264820092633D /* Contraster.entitlements */,
 			);
 			path = Trunk;
@@ -224,12 +242,9 @@
 		0866CAF928C265830092633D /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				0866CAEE28C261540092633D /* PagerView.swift */,
 				0866CAFA28C265CF0092633D /* ColourPreview.swift */,
 				08F6419D28C3AD10008EB225 /* ContrastResults.swift */,
 				0804583D28C3B2160046060A /* ContrastResult.swift */,
-				082E258E28C632DB00AF46DF /* Line.swift */,
-				082E259028C6343300AF46DF /* JoiningLine.swift */,
 				08FFE00128DC701500B3B2C4 /* ContrastResultsAnimated.swift */,
 				08EADAA728E22E98001289BD /* GButton.swift */,
 				08458FEC2AA36D7300F42A92 /* CardView.swift */,
@@ -240,6 +255,10 @@
 		0866CAFC28C26A830092633D /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				08REF01228F0000100A1B2C /* ScreenCoordinateMapper.swift */,
+				08REF01328F0000100A1B2C /* Bundle+Version.swift */,
+				08REF01428F0000100A1B2C /* AppURLs.swift */,
+				08REF01528F0000100A1B2C /* MagnificationImageRenderer.swift */,
 				0866CAFD28C26A950092633D /* Color+Functions.swift */,
 				08DBG00128F0000100A1B2C /* Debug.swift */,
 				086C010528D511A600C59051 /* NSScreen+Functions.swift */,
@@ -251,12 +270,41 @@
 		088AC0E928C8E33B00153A74 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				08REF01628F0000100A1B2C /* ContrastCalculator.swift */,
 				088AC0EA28C8E35300153A74 /* ResultsModel.swift */,
 				088AC0EC28C8E3F100153A74 /* Compliance.swift */,
-				088AC0F128C905F200153A74 /* ColourPicker.swift */,
 				089B04BE28DB507F00213E38 /* AppModel.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+
+		08GRP00128F0000100A1B2C /* App */ = {
+			isa = PBXGroup;
+			children = (
+				08REF01128F0000100A1B2C /* ContrasterAppActions.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		08GRP00228F0000100A1B2C /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				08REF01828F0000100A1B2C /* ScreenRecordingPermissionMonitor.swift */,
+				08REF01928F0000100A1B2C /* ScreenshotCaptureService.swift */,
+				08REF01A28F0000100A1B2C /* ColorSampler.swift */,
+				08REF01B28F0000100A1B2C /* ColorPickingCoordinator.swift */,
+				08REF01C28F0000100A1B2C /* PopoverController.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		08GRP00328F0000100A1B2C /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				08REF01728F0000100A1B2C /* ColorPairStore.swift */,
+			);
+			path = Persistence;
 			sourceTree = "<group>";
 		};
 		08D2E2BA28DCC6570088428F /* Constants */ = {
@@ -371,7 +419,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0866CAF828C265500092633D /* Main.storyboard in Resources */,
 				0826576428C225540069D5C5 /* Assets.xcassets in Resources */,
 				0866CAF728C264820092633D /* Info.plist in Resources */,
 			);
@@ -399,7 +446,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				0866CAEC28C2613A0092633D /* Main.swift in Sources */,
-				088AC0F228C905F200153A74 /* ColourPicker.swift in Sources */,
 				0866CAFE28C26A950092633D /* Color+Functions.swift in Sources */,
 				08DBG00228F0000100A1B2C /* Debug.swift in Sources */,
 				08FFE00228DC701500B3B2C4 /* ContrastResultsAnimated.swift in Sources */,
@@ -407,7 +453,6 @@
 				08EADAA828E22E98001289BD /* GButton.swift in Sources */,
 				086C010828D511CB00C59051 /* ScreenHelper.swift in Sources */,
 				08458FED2AA36D7300F42A92 /* CardView.swift in Sources */,
-				082E259128C6343300AF46DF /* JoiningLine.swift in Sources */,
 				08EAF87E28E5A4DD00945397 /* Tutorial.swift in Sources */,
 				08E6E68628E560C90093D89B /* Settings+CoreDataProperties.swift in Sources */,
 				0866CAED28C2613A0092633D /* About.swift in Sources */,
@@ -420,14 +465,23 @@
 				086C010628D511A600C59051 /* NSScreen+Functions.swift in Sources */,
 				089B04BF28DB507F00213E38 /* AppModel.swift in Sources */,
 				08DF062828C2298300F1B733 /* AppDelegate.swift in Sources */,
+				08REF00128F0000100A1B2C /* ContrasterAppActions.swift in Sources */,
+				08REF00228F0000100A1B2C /* ScreenCoordinateMapper.swift in Sources */,
+				08REF00328F0000100A1B2C /* Bundle+Version.swift in Sources */,
+				08REF00428F0000100A1B2C /* AppURLs.swift in Sources */,
+				08REF00528F0000100A1B2C /* MagnificationImageRenderer.swift in Sources */,
+				08REF00628F0000100A1B2C /* ContrastCalculator.swift in Sources */,
+				08REF00728F0000100A1B2C /* ColorPairStore.swift in Sources */,
+				08REF00828F0000100A1B2C /* ScreenRecordingPermissionMonitor.swift in Sources */,
+				08REF00928F0000100A1B2C /* ScreenshotCaptureService.swift in Sources */,
+				08REF00A28F0000100A1B2C /* ColorSampler.swift in Sources */,
+				08REF00B28F0000100A1B2C /* ColorPickingCoordinator.swift in Sources */,
+				08REF00C28F0000100A1B2C /* PopoverController.swift in Sources */,
 				080E63C028E305F70041AE85 /* PickedColorPair+CoreDataProperties.swift in Sources */,
 				08B0CC9228E307BB004A319C /* CoreDataStack.swift in Sources */,
 				0804583E28C3B2160046060A /* ContrastResult.swift in Sources */,
 				088AC0EB28C8E35300153A74 /* ResultsModel.swift in Sources */,
-				0866CAEF28C261540092633D /* PagerView.swift in Sources */,
 				080E63BC28E305C60041AE85 /* PersistedDataModel.xcdatamodeld in Sources */,
-				08DF062A28C229B500F1B733 /* AppDelegate+Functions.swift in Sources */,
-				082E258F28C632DB00AF46DF /* Line.swift in Sources */,
 				08E6E68528E560C90093D89B /* Settings+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -437,6 +491,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0826577228C225540069D5C5 /* contrasterTests.swift in Sources */,
+				08REF00D28F0000100A1B2C /* ContrastCalculatorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -594,7 +649,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Contraster/Trunk/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -623,7 +677,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Contraster/Trunk/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",

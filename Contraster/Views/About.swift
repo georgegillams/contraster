@@ -2,18 +2,14 @@
 //  About.swift
 //  Contraster
 //
-//  Created by George Gillams on 02/09/2022.
-//
 
 import Cocoa
 import SwiftUI
 
 struct AboutView: View {
-    var delegate: AppDelegate = NSApp.delegate as! AppDelegate
-    var versionNsObject: AnyObject? = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as AnyObject
+    let appActions: ContrasterAppActions
 
     var body: some View {
-        let version = versionNsObject as! String
         VStack {
             VStack(alignment: .center) {
                 Image("eyedropper-3d")
@@ -21,57 +17,50 @@ struct AboutView: View {
                     .scaledToFit()
                     .frame(width: 64, height: 64)
 
-                Text("Contraster \(version)")
+                Text("Contraster \(Bundle.main.appVersion)")
                     .bold()
                     .font(.title)
                     .padding(.vertical, 5.0)
-                    
 
                 Text("Created by George Gillams")
                     .underline()
                     .onTapGesture {
-                        if let url = URL(string: "https://www.georgegillams.co.uk/") {
-                            NSWorkspace.shared.open(url)
-                        }
+                        AppURLs.open(AppURLs.author)
                     }
-                    
             }
             .padding(.vertical, 10.0)
-            
-                Button(action: {
-                    delegate.showWelcomeTutorial()
-                }) {
-                    Text("Show welcome tutorial")
-                }
-            
+
+            Button(action: {
+                appActions.showWelcomeTutorial()
+            }) {
+                Text("Show welcome tutorial")
+            }
+
             HStack {
                 Text("Bug or feature request?")
 
                 Button(action: {
-                    if let url = URL(string: "https://www.georgegillams.co.uk/contraster-feedback") {
-                        NSWorkspace.shared.open(url)
-                    }
+                    AppURLs.openFeedback()
                 }) {
                     Text("Tell Me")
                 }
             }
-        }.padding(10.0)
-            .background(Color.clear)
-            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .center)
+        }
+        .padding(10.0)
+        .background(Color.clear)
+        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .center)
     }
 }
 
 class AboutWindowController {
-    static func createWindow() {
-        var windowRef: NSWindow
-        windowRef = NSWindow(
+    static func createWindow(appActions: ContrasterAppActions) {
+        let windowRef = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 380, height: 240),
-            styleMask: [
-                .titled,
-                .closable,
-                .borderless],
-            backing: .buffered, defer: false)
-        windowRef.contentView = NSHostingView(rootView: AboutView())
+            styleMask: [.titled, .closable, .borderless],
+            backing: .buffered,
+            defer: false
+        )
+        windowRef.contentView = NSHostingView(rootView: AboutView(appActions: appActions))
         windowRef.title = "About Contraster"
         windowRef.level = .floating
         windowRef.isReleasedWhenClosed = false
@@ -81,6 +70,18 @@ class AboutWindowController {
 
 struct AboutView_Previews: PreviewProvider {
     static var previews: some View {
-        AboutView().frame(width: 380, height: 240)
+        AboutView(appActions: PreviewAboutActions()).frame(width: 380, height: 240)
     }
+}
+
+private final class PreviewAboutActions: ContrasterAppActions {
+    func togglePopover(_ sender: AnyObject?) {}
+    func openMenu() {}
+    func updateMouseTrapWindow() {}
+    func showWelcomeTutorial() {}
+    func hideTutorial() {}
+    func hasScreenRecordingPermissions() -> Bool { true }
+    func checkScreenRecordingPermissions() {}
+    func openScreenRecordingPreferences() {}
+    func updatePopoverContentSize() {}
 }
