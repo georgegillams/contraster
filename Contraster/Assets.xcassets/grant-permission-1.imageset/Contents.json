@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "screen-recording-light@1x.png",
+      "filename" : "permission-light@1x.png",
       "idiom" : "mac",
       "scale" : "1x"
     },
@@ -12,12 +12,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "screen-recording-dark@1x.png",
+      "filename" : "permission-dark@1x.png",
       "idiom" : "mac",
       "scale" : "1x"
     },
     {
-      "filename" : "screen-recording-light@2x.png",
+      "filename" : "permission-light@2x.png",
       "idiom" : "mac",
       "scale" : "2x"
     },
@@ -28,7 +28,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "screen-recording-dark@2x.png",
+      "filename" : "permission-dark@2x.png",
       "idiom" : "mac",
       "scale" : "2x"
     }

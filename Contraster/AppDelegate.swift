@@ -6,7 +6,7 @@
 import Cocoa
 import SwiftUI
 
-class AppDelegate: NSObject, NSApplicationDelegate, ContrasterAppActions {
+class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, ContrasterAppActions {
     let colourPickerWindow = NSWindow(
         contentRect: NSMakeRect(0, 0, 50, 50),
         styleMask: .borderless,
@@ -26,6 +26,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ContrasterAppActions {
         defer: false
     )
     var tutorialWindow: NSWindow?
+    private var tutorialHostingController: NSHostingController<Tutorial>?
 
     var popover: NSPopover!
     var statusBarItem: NSStatusItem!
@@ -46,30 +47,43 @@ class AppDelegate: NSObject, NSApplicationDelegate, ContrasterAppActions {
         mouseTrapWindow: mouseTrapWindow
     )
     private var popoverController: PopoverController!
+    private var popoverEscapeMonitor: Any?
     private let permissionMonitor = ScreenRecordingPermissionMonitor.shared
 
     func showWelcomeTutorial() {
-        tutorialUI = Tutorial(appModel: appModel, appActions: self)
-        tutorialWindow = NSWindow(
-            contentRect: NSMakeRect(200, 200, 800, 500),
-            styleMask: [.closable, .titled, .resizable],
-            backing: .buffered,
-            defer: false
-        )
-        if let window = tutorialWindow {
+        if tutorialWindow == nil {
+            let window = NSWindow(
+                contentRect: NSMakeRect(200, 200, 800, 500),
+                styleMask: [.closable, .titled, .resizable],
+                backing: .buffered,
+                defer: false
+            )
             window.contentView?.wantsLayer = true
             window.titlebarAppearsTransparent = true
             window.titleVisibility = .visible
             window.standardWindowButton(.miniaturizeButton)?.isHidden = true
             window.standardWindowButton(.zoomButton)?.isHidden = true
-            window.makeKeyAndOrderFront(tutorialWindow)
-            window.level = .floating
-            window.contentViewController = NSHostingController(rootView: tutorialUI)
+            window.isReleasedWhenClosed = false
+            window.delegate = self
+            tutorialWindow = window
         }
+
+        let tutorial = Tutorial(
+            appModel: appModel,
+            appActions: self,
+            permissionMonitor: permissionMonitor
+        )
+        tutorialUI = tutorial
+
+        tutorialWindow?.contentViewController = nil
+        let hostingController = NSHostingController(rootView: tutorial)
+        tutorialHostingController = hostingController
+        tutorialWindow?.contentViewController = hostingController
+        tutorialWindow?.makeKeyAndOrderFront(nil)
     }
 
     func hideTutorial() {
-        tutorialWindow?.close()
+        tutorialWindow?.orderOut(nil)
     }
 
     func hasScreenRecordingPermissions() -> Bool {
@@ -154,6 +168,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ContrasterAppActions {
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
         }
 
+        installPopoverEscapeMonitor()
+        installSystemEventObservers()
+
         if isGDebugScheme {
             runDebugStartupSequence()
             showWelcomeTutorial()
@@ -162,6 +179,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, ContrasterAppActions {
         } else {
             showWelcomeTutorial()
         }
+    }
+
+    func windowWillClose(_ notification: Notification) {
+        guard let window = notification.object as? NSWindow,
+              window === tutorialWindow else { return }
+        tutorialWindow?.contentViewController = nil
+        tutorialHostingController = nil
+        tutorialUI = nil
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {}
@@ -203,15 +228,51 @@ class AppDelegate: NSObject, NSApplicationDelegate, ContrasterAppActions {
             if event.modifierFlags.contains(.option) {
                 openPopoverAndStartPick()
             } else if popoverController.isShown {
-                popoverController.close(sender: sender)
-                appModel.cancelPick()
-                updateMouseTrapWindow()
+                closePopover(sender: sender)
             } else {
                 popoverController.show()
             }
         } else if event.type == .rightMouseUp {
             openMenu()
         }
+    }
+
+    private func closePopover(sender: AnyObject? = nil) {
+        guard popoverController.isShown else { return }
+        popoverController.close(sender: sender)
+        appModel.cancelPick()
+        updateMouseTrapWindow()
+    }
+
+    private func installPopoverEscapeMonitor() {
+        popoverEscapeMonitor = NSEvent.addLocalMonitorForEvents(matching: [.keyDown]) { [weak self] event in
+            guard let self else { return event }
+            guard event.keyCode == 53 else { return event }
+            guard self.popoverController.isShown else { return event }
+            guard self.appModel.pickingMode == .notPicking else { return event }
+            self.closePopover()
+            return nil
+        }
+    }
+
+    private func installSystemEventObservers() {
+        let workspace = NSWorkspace.shared
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleSystemSleepOrLock(_:)),
+            name: NSWorkspace.willSleepNotification,
+            object: workspace
+        )
+        DistributedNotificationCenter.default().addObserver(
+            self,
+            selector: #selector(handleSystemSleepOrLock(_:)),
+            name: NSNotification.Name("com.apple.screenIsLocked"),
+            object: nil
+        )
+    }
+
+    @objc private func handleSystemSleepOrLock(_ notification: Notification) {
+        closePopover()
     }
 
     @objc func openAbout() {
@@ -228,6 +289,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ContrasterAppActions {
         menu.addItem(withTitle: "About Contraster", action: #selector(openAbout), keyEquivalent: "")
         menu.addItem(withTitle: "Show tutorial", action: #selector(viewOnboarding), keyEquivalent: "")
         menu.addItem(withTitle: "Send me feedback", action: #selector(openFeedback), keyEquivalent: "")
+        menu.addItem(withTitle: "Clear picking history", action: #selector(clearPickingHistory), keyEquivalent: "")
         menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: "Contraster \(version)", action: nil, keyEquivalent: ""))
         menu.addItem(withTitle: "Quit Contraster", action: #selector(quit), keyEquivalent: "q")
@@ -239,6 +301,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, ContrasterAppActions {
 
     @objc func openFeedback() {
         AppURLs.openFeedback()
+    }
+
+    @objc func clearPickingHistory() {
+        let alert = NSAlert()
+        alert.messageText = "Clear picking history?"
+        alert.informativeText = "This will permanently delete all saved colour picks. This cannot be undone."
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: "Clear history")
+        alert.addButton(withTitle: "Cancel")
+
+        guard alert.runModal() == .alertFirstButtonReturn else { return }
+
+        appModel.clearPickingHistory()
     }
 
     @objc func quit() {

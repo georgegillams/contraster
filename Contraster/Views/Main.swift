@@ -57,6 +57,9 @@ struct Main: View {
         .onChange(of: isPicking) { _ in
             schedulePopoverSizeUpdate(after: 0.05)
         }
+        .onChange(of: appModel.resultsList.count) { _ in
+            schedulePopoverSizeUpdate(after: 0.05)
+        }
     }
 }
 
@@ -82,7 +85,7 @@ private struct PickingStatusHeader: View {
                     .font(InterfaceConstants.popoverSecondaryFont)
                     .foregroundStyle(.secondary)
             } else {
-                Text("💡Tip: Option + click the menu item to start picking immediately")
+                Text("💡Tip: Hold option (⌥) and click the menu item to start picking immediately")
                     .font(InterfaceConstants.popoverSecondaryFont)
                     .foregroundStyle(.secondary)
             }

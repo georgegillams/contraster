@@ -39,11 +39,15 @@ final class PopoverController {
         if let frameView = contentView.superview {
             frameView.wantsLayer = true
             frameView.layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
+            alignPopoverChrome(with: frameView)
         }
 
         if let window = contentView.window {
             window.backgroundColor = NSColor.windowBackgroundColor
             window.isOpaque = true
+            if let frameView = window.contentView?.superview {
+                alignPopoverChrome(with: frameView)
+            }
         }
     }
 
@@ -88,5 +92,17 @@ final class PopoverController {
 
     func close(sender: AnyObject?) {
         popover.performClose(sender)
+    }
+
+    /// Match the popover chrome (including the arrow) to the content background.
+    private func alignPopoverChrome(with view: NSView) {
+        if let effectView = view as? NSVisualEffectView {
+            effectView.material = .windowBackground
+            effectView.blendingMode = .withinWindow
+            effectView.state = .active
+        }
+        for subview in view.subviews {
+            alignPopoverChrome(with: subview)
+        }
     }
 }

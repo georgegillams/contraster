@@ -64,6 +64,18 @@ final class ColorPairStore {
         }
     }
 
+    func deleteAllPairs() {
+        let request = PickedColorPair.fetchRequest()
+
+        do {
+            let pairs = try helper.context.fetch(request)
+            pairs.forEach { helper.context.delete($0) }
+            saveContext()
+        } catch {
+            print("Could not delete all color pairs: \(error)")
+        }
+    }
+
     func setFirstWelcomeDone() {
         let request = NSFetchRequest<Settings>(entityName: "Settings")
 
