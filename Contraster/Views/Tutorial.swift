@@ -4,6 +4,7 @@
 //
 
 import AppKit
+import LaunchAtLogin
 import SwiftUI
 
 struct BackButton: View {
@@ -88,6 +89,27 @@ struct TutorialStepContent: View {
             }
             .frame(width: 300)
             TutorialImage(imageName: imageName, size: imageSize)
+        }
+    }
+}
+
+struct TutorialLaunchAtLoginContent: View {
+    var body: some View {
+        HStack(spacing: 40) {
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Launch at login")
+                    .font(.system(size: 24, weight: .semibold))
+                Text("This keeps the menu bar icon available whenever you need to pick a colour.")
+                LaunchAtLogin.Toggle()
+                    .toggleStyle(.switch)
+            }
+            .frame(width: 300)
+            if let icon = NSApplication.shared.applicationIconImage {
+                Image(nsImage: icon)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 100, height: 100)
+            }
         }
     }
 }
@@ -201,6 +223,8 @@ struct Tutorial: View {
                 imageName: "feedback",
                 imageSize: .menu
             )
+        case 5:
+            TutorialLaunchAtLoginContent()
         default:
             EmptyView()
         }
@@ -260,6 +284,14 @@ struct Tutorial: View {
                 }
             }
         case 4:
+            TutorialNavigationBar {
+                BackButton(buttonAction: { stage -= 1 })
+            } center: {
+                GButton(kind: .primary, action: { stage += 1 }) {
+                    Text("Almost done")
+                }
+            }
+        case 5:
             TutorialNavigationBar {
                 BackButton(buttonAction: { stage -= 1 })
             } center: {

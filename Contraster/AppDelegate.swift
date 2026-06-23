@@ -4,6 +4,7 @@
 //
 
 import Cocoa
+import LaunchAtLogin
 import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, ContrasterAppActions {
@@ -290,6 +291,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, Contraster
         menu.addItem(withTitle: "Show tutorial", action: #selector(viewOnboarding), keyEquivalent: "")
         menu.addItem(withTitle: "Send me feedback", action: #selector(openFeedback), keyEquivalent: "")
         menu.addItem(withTitle: "Clear picking history", action: #selector(clearPickingHistory), keyEquivalent: "")
+        let launchAtLoginItem = menu.addItem(
+            withTitle: "Launch at login",
+            action: #selector(toggleLaunchAtLogin(_:)),
+            keyEquivalent: ""
+        )
+        launchAtLoginItem.state = LaunchAtLogin.isEnabled ? .on : .off
+        launchAtLoginItem.target = self
         menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: "Contraster \(version)", action: nil, keyEquivalent: ""))
         menu.addItem(withTitle: "Quit Contraster", action: #selector(quit), keyEquivalent: "q")
@@ -301,6 +309,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, Contraster
 
     @objc func openFeedback() {
         AppURLs.openFeedback()
+    }
+
+    @objc func toggleLaunchAtLogin(_ sender: NSMenuItem) {
+        LaunchAtLogin.isEnabled.toggle()
     }
 
     @objc func clearPickingHistory() {
