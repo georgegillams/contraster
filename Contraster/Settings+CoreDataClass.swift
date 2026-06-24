@@ -14,7 +14,7 @@ public class Settings: NSManagedObject {
     convenience init(context: NSManagedObjectContext) {
         if let ent = NSEntityDescription.entity(forEntityName: "Settings", in: context) {
             self.init(entity: ent, insertInto: context)
-            self.firstWelcomeDone = true
+            self.firstWelcomeDone = false
         } else {
             fatalError("Unable to find Entity name!")
         }

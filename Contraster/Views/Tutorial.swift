@@ -164,8 +164,10 @@ struct Tutorial: View {
     var body: some View {
         VStack(spacing: 0) {
             VStack(spacing: 10) {
-                Text("Welcome to").font(Font.system(size: 24))
-                Text("Contraster!").font(Font.system(size: 32)).bold()
+                VStack {
+                    Text("Welcome to").font(Font.system(size: 24))
+                    Text("Contraster!").font(Font.system(size: 32)).bold()
+                }
                 if let icon = NSApplication.shared.applicationIconImage {
                     Image(nsImage: icon)
                         .resizable()
@@ -295,10 +297,7 @@ struct Tutorial: View {
             TutorialNavigationBar {
                 BackButton(buttonAction: { stage -= 1 })
             } center: {
-                GButton(kind: .primary, action: {
-                    appModel.setFirstWelcomeDone()
-                    appActions.hideTutorial()
-                }) {
+                GButton(kind: .primary, action: completeTutorial) {
                     Text("Got it!")
                 }
             }
@@ -309,6 +308,11 @@ struct Tutorial: View {
 
     private func advanceFromPermissionsIntro() {
         stage = 1
+    }
+
+    private func completeTutorial() {
+        appModel.setFirstWelcomeDone()
+        appActions.hideTutorial()
     }
 }
 

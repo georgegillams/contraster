@@ -115,6 +115,10 @@ class AppModel: ObservableObject {
         store.isFirstWelcomeDone()
     }
 
+    func resetFirstWelcomeDone() {
+        store.resetFirstWelcomeDone()
+    }
+
     private func loadHistory() {
         store.loadAllPairs().forEach { pair in
             resultsList.insert(

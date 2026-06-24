@@ -106,12 +106,24 @@ final class ColorPairStore {
 
         do {
             if let settings = try helper.context.fetch(request).first {
-                return settings.firstWelcomeDone
+                return settings.firstWelcomeDone == true
             }
         } catch {
             print("Could not read settings: \(error)")
         }
         return false
+    }
+
+    func resetFirstWelcomeDone() {
+        let request = NSFetchRequest<Settings>(entityName: "Settings")
+
+        do {
+            guard let settings = try helper.context.fetch(request).first else { return }
+            settings.firstWelcomeDone = false
+            saveContext()
+        } catch {
+            print("Error in resetFirstWelcomeDone: \(error)")
+        }
     }
 
     private func saveContext() {

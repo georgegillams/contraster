@@ -77,7 +77,7 @@
 		080E63BB28E305C60041AE85 /* PersistedDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PersistedDataModel.xcdatamodel; sourceTree = "<group>"; };
 		080E63BD28E305F70041AE85 /* PickedColorPair+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "PickedColorPair+CoreDataClass.swift"; path = "Contraster/PickedColorPair+CoreDataClass.swift"; sourceTree = "<group>"; };
 		080E63BE28E305F70041AE85 /* PickedColorPair+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "PickedColorPair+CoreDataProperties.swift"; path = "Contraster/PickedColorPair+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		0826575C28C225510069D5C5 /* Contraster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Contraster.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0826575C28C225510069D5C5 /* Contraster Local.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Contraster Local.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0826576328C225540069D5C5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0826576D28C225540069D5C5 /* ContrasterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ContrasterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0826577128C225540069D5C5 /* contrasterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = contrasterTests.swift; sourceTree = "<group>"; };
@@ -169,7 +169,7 @@
 		0826575D28C225510069D5C5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0826575C28C225510069D5C5 /* Contraster.app */,
+				0826575C28C225510069D5C5 /* Contraster Local.app */,
 				0826576D28C225540069D5C5 /* ContrasterTests.xctest */,
 				0826577728C225540069D5C5 /* ContrasterUITests.xctest */,
 			);
@@ -334,7 +334,7 @@
 			);
 			name = Contraster;
 			productName = Contraster;
-			productReference = 0826575C28C225510069D5C5 /* Contraster.app */;
+			productReference = 0826575C28C225510069D5C5 /* Contraster Local.app */;
 			productType = "com.apple.product-type.application";
 		};
 		0826576C28C225540069D5C5 /* ContrasterTests */ = {
@@ -647,22 +647,25 @@
 				CODE_SIGN_ENTITLEMENTS = Contraster/Trunk/Contraster.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"Contraster/Preview Content\"";
 				DEVELOPMENT_TEAM = F2NH4J9NYG;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Contraster/Trunk/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Contraster (Local)";
+				INFOPLIST_KEY_CFBundleName = "Contraster Local";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSScreenCaptureUsageDescription = "Contraster (Local) needs screen recording permission to capture colours from your screen. This allows you to pick colours from any pixel on your display. We don't store or transmit any screen content.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.1;
-				PRODUCT_BUNDLE_IDENTIFIER = uk.co.georgegillams.Contraster;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = uk.co.georgegillams.Contraster.local;
+				PRODUCT_NAME = "Contraster Local";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -676,7 +679,7 @@
 				CODE_SIGN_ENTITLEMENTS = Contraster/Trunk/Contraster.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"Contraster/Preview Content\"";
 				DEVELOPMENT_TEAM = F2NH4J9NYG;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -712,7 +715,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Contraster.app/Contents/MacOS/Contraster";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Contraster Local.app/Contents/MacOS/Contraster Local";
 			};
 			name = Debug;
 		};
