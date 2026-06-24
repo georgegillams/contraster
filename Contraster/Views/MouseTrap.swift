@@ -29,6 +29,21 @@ struct MouseTrap: View {
                     .frame(width: InterfaceConstants.magnificationWidth, height: InterfaceConstants.magnificationHeight)
                     .clipShape(RoundedRectangle(cornerRadius: 16))
                     .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.gray.opacity(0.3), lineWidth: 1))
+                    .overlay(alignment: .bottomLeading) {
+                        Text("Scroll to zoom")
+                            .font(.system(size: 12, weight: .semibold))
+                            .foregroundColor(.white)
+                            .shadow(color: .black, radius: 0, x: -1, y: -1)
+                            .shadow(color: .black, radius: 0, x: 1, y: -1)
+                            .shadow(color: .black, radius: 0, x: -1, y: 1)
+                            .shadow(color: .black, radius: 0, x: 1, y: 1)
+                            .shadow(color: .black, radius: 0, x: 0, y: -1)
+                            .shadow(color: .black, radius: 0, x: 0, y: 1)
+                            .shadow(color: .black, radius: 0, x: -1, y: 0)
+                            .shadow(color: .black, radius: 0, x: 1, y: 0)
+                            .padding(.leading, 10)
+                            .padding(.bottom, 10)
+                    }
                 }
 
                 Circle()
