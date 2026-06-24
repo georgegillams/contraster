@@ -285,7 +285,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, Contraster
     }
 
     @objc func openMenu() {
-        let version = Bundle.main.appVersion
+        let buildLabel = Bundle.main.menuBuildLabel
         let menu = NSMenu()
         menu.addItem(withTitle: "About Contraster", action: #selector(openAbout), keyEquivalent: "")
         menu.addItem(withTitle: "Show tutorial", action: #selector(viewOnboarding), keyEquivalent: "")
@@ -298,8 +298,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, Contraster
         )
         launchAtLoginItem.state = LaunchAtLogin.isEnabled ? .on : .off
         launchAtLoginItem.target = self
+        if NSApp.currentEvent?.modifierFlags.contains(.option) == true {
+            let resetTutorialItem = menu.addItem(
+                withTitle: "Reset welcome tutorial done",
+                action: #selector(resetWelcomeTutorialDone),
+                keyEquivalent: ""
+            )
+            resetTutorialItem.target = self
+        }
         menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: "Contraster \(version)", action: nil, keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "Contraster \(buildLabel)", action: nil, keyEquivalent: ""))
         menu.addItem(withTitle: "Quit Contraster", action: #selector(quit), keyEquivalent: "q")
 
         statusBarItem.menu = menu
@@ -313,6 +321,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, Contraster
 
     @objc func toggleLaunchAtLogin(_ sender: NSMenuItem) {
         LaunchAtLogin.isEnabled.toggle()
+    }
+
+    @objc func resetWelcomeTutorialDone() {
+        appModel.resetFirstWelcomeDone()
     }
 
     @objc func clearPickingHistory() {

@@ -12,10 +12,12 @@ struct AboutView: View {
     var body: some View {
         VStack {
             VStack(alignment: .center) {
-                Image("eyedropper-3d")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 64, height: 64)
+                if let icon = NSApplication.shared.applicationIconImage {
+                    Image(nsImage: icon)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 64, height: 64)
+                }
 
                 Text("Contraster \(Bundle.main.appVersion)")
                     .bold()

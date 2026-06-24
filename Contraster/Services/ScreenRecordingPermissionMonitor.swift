@@ -3,6 +3,7 @@
 //  Contraster
 //
 
+import AppKit
 import Combine
 import CoreGraphics
 import Foundation
@@ -14,9 +15,20 @@ final class ScreenRecordingPermissionMonitor: ObservableObject {
     @Published private(set) var hasPermissions = false
 
     private var pollingTimer: Timer?
+    private var activationObserver: NSObjectProtocol?
     private let pollInterval: TimeInterval = 2.0
 
-    private init() {}
+    private init() {
+        activationObserver = NotificationCenter.default.addObserver(
+            forName: NSApplication.didBecomeActiveNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                self?.refresh()
+            }
+        }
+    }
 
     func refresh() {
         hasPermissions = CGPreflightScreenCaptureAccess()
@@ -26,11 +38,13 @@ final class ScreenRecordingPermissionMonitor: ObservableObject {
     func startPolling() {
         refresh()
         pollingTimer?.invalidate()
-        pollingTimer = Timer.scheduledTimer(withTimeInterval: pollInterval, repeats: true) { [weak self] _ in
+        let timer = Timer(timeInterval: pollInterval, repeats: true) { [weak self] _ in
             Task { @MainActor in
                 self?.refresh()
             }
         }
+        RunLoop.main.add(timer, forMode: .common)
+        pollingTimer = timer
     }
 
     func stopPolling() {
