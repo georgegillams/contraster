@@ -59,9 +59,9 @@ class ResultsModel: ObservableObject, Identifiable {
     func setPreviewColor(_ color: Color, slot: PickingColorSlot) {
         switch slot {
         case .first:
-            _color1 = color
+            color1 = color
         case .second:
-            _color2 = color
+            color2 = color
         }
     }
 
