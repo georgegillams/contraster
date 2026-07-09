@@ -6,6 +6,10 @@ Contraster runs from the menu bar (there is no Dock icon). Screen content is onl
 
 ## Using the app
 
+### Install
+
+Download on the app store: https://apps.apple.com/gb/app/contraster/id6464116077?mt=12
+
 ### First launch
 
 On first run, Contraster shows a welcome tutorial. The first step asks for **Screen Recording** permission, which macOS requires before any app can read pixel colours from the display. Contraster only samples the pixels you click; it does not record or send screen content.
