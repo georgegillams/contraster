@@ -4,11 +4,20 @@ A fast, lightweight macOS menu bar utility for checking colour contrast. Pick tw
 
 Contraster runs from the menu bar (there is no Dock icon). Screen content is only read to sample individual pixel colours — nothing is stored or transmitted.
 
-## Using the app
-
-### Install
+## Install
 
 Download on the app store: https://apps.apple.com/gb/app/contraster/id6464116077?mt=12
+
+Run, and look for the app in the status bar.
+
+### Direct download
+
+1. Go to https://github.com/georgegillams/contraster/releases/
+1. Download and extract the latest zip
+1. Copy the app to `/Applications` and run it
+1. Look for the app in the status bar.
+
+## Using the app
 
 ### First launch
 
@@ -177,10 +186,25 @@ MIT — see [LICENSE](LICENSE).
 
 ## Release
 
-- Update version (marketing version) and build (needs incrementing). In XCode, click Contraster -> General -> Identity -> Version/Build
+- Update version (marketing version) and build (needs incrementing). In Xcode: select **Contraster** target → **General** → **Identity** → **Version** / **Build**
 - Take screenshots at 1280x800
 - Clean
 - Create build online at https://appstoreconnect.apple.com/
 - Select non-debug scheme
 - Archive
 - Upload
+
+### Manual distribution (GitHub Releases)
+
+1. In Xcode, select the **Contraster** scheme and **Any Mac (Mac Catalyst)** / **My Mac** as appropriate.
+1. Update **Version** / **Build** (see App Store steps above).
+1. Product → **Archive**.
+1. In the Organizer, select the archive → **Distribute App** → **Direct Distribution**
+1. After notarization completes, in the table row, select **Export** to export `Contraster.app`.
+1. Zip the app for distribution (Finder: right click `Contraster.app` → **Compress**) and name it like `Contraster-<version>.zip`.
+1. Revert XCode build target to **Contraster** → **My Mac**.
+1. In GitHub: go to the [releases page](https://github.com/georgegillams/contraster/releases/) and click **Draft a new release**.
+1. Choose a tag (create one if needed) like `1.0.0`, set the release title, and write release notes.
+1. Under **Assets**, upload `Contraster-<version>.zip`.
+1. Click **Publish release**.
+
